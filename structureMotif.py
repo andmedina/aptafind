@@ -3,6 +3,11 @@ import re
 import subprocess
 import os
 import nupack
+import numpy as np
+
+'''Computes secondary structures using nupack while predicting structure motifs using rnaforester. 
+This is a type of sequence structure alignment tool. Also uses varna draw the secondary strutures and highlight the predicted structure motifs.
+'''
 
 
 def read_sequences(filename):
@@ -13,12 +18,15 @@ def read_sequences(filename):
 
 
 def compute_mfe_structures(sequences):
-    #Store structure and mfe information
+    # Store structure and mfe information in lists
     struct = []
     gibbs = []
+    stacking_energy_list = []
+    matrix_list = []
+    pseudo_list = []
+    
     # Define the sequence
     for sequence in sequences:
-    
         # Define the strand and set the nucleic acid type (use 'dna' for DNA, 'rna' for RNA)
         strand = nupack.Strand(sequence, 'my_strand', material='DNA')
 
@@ -31,14 +39,33 @@ def compute_mfe_structures(sequences):
         # Compute the MFE structure
         mfe_result = nupack.mfe(complex, model=options)
 
-        # Print the MFE structure and its energy
+        # Extract information from the MFE result
         structure = str(mfe_result[0].structure)
         energy = str(mfe_result[0].energy)
+        stacking_energy = mfe_result[0].stack_energy
+        matrix = mfe_result[0].structure.matrix().astype(np.int64)
+        pseudo = mfe_result[0].structure.pseudoknots()
+        
+        # Append the information to the respective lists
         struct.append(structure)
         gibbs.append(energy)
+        stacking_energy_list.append(stacking_energy)
+        matrix_list.append(matrix)
+        pseudo_list.append(pseudo)
     
+    # Create a dictionary to store the results
+    mfe_dict = {
+        'structure': struct,
+        'gibbs_energy': gibbs,
+        'stacking_energy': stacking_energy_list,
+        'matrix': matrix_list,
+        'pseudoknots': pseudo_list
+    }
+
+
+
     
-    return struct, gibbs
+    return mfe_dict
 
 
 def format_sequences_for_forester(sequences, struct):
@@ -135,7 +162,7 @@ def generate_structure_images(var_object, output_directory, resolution):
         structure = item['structure']
         index1 = item['index1']
         index2 = item['index2']
-        print(index1, index2)
+        #print(index1, index2)
         output_file = os.path.join(output_directory, f"result{i + 1}.PNG")
         highlight_region = f'"{index1}-{index2}:fill=#bcffdd"'
         
