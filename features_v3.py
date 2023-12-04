@@ -751,3 +751,24 @@ print(f" fingerprint: {fingerprints_reduced_data.shape}") #This fingerpint was o
 print(f"molecule properties: {molecule_properties_reduced_data.shape}")
 print(f"total dim: {sequences_reduced_data.shape[1] + kd.shape[1] + target_type_reduced_data.shape[1] + aptamer_structures_reduced_data.shape[1] + kmers_reduced_data.shape[1] + sequence_embedding_reduced_data.shape[1] + binding_energies.shape[1] + fingerprints_reduced_data.shape[1] + molecule_properties_reduced_data.shape[1]}")
 
+
+#Return features in a dictionary
+# features.py
+
+def get_features():  
+
+    return {
+        'sequences': sequences_reduced_data,
+        'kd': kd,
+        'target_type': target_type_reduced_data,
+        'structures': aptamer_structures_reduced_data,
+        'kmers': kmers_reduced_data,
+        'sequence_embedding': sequence_embedding_reduced_data,
+        'binding_energy': binding_energies,
+        'fingerprint': fingerprints_reduced_data,
+        'molecule_properties': molecule_properties_reduced_data
+    }
+
+
+
+
