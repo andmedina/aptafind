@@ -9,7 +9,7 @@ import re
 import json
 import structureMotif
 import to_fasta_file
-import sequenceMotif
+#import sequenceMotif
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow import keras
@@ -497,6 +497,10 @@ df.drop(columns=cols_to_drop, axis=1, inplace=True)
 #       dtype='object')
 
 #----------------------standardize Kd----------------------------
+
+
+
+
 scaler = StandardScaler()  # Create the StandardScaler
 scaled_kd = scaler.fit_transform(df['kd'].values.reshape(-1, 1))  # Reshape and standardize the 'kd' column
 df['kd'] = scaled_kd  # Replace the original 'kd' column with the standardized values
@@ -684,16 +688,16 @@ mse = mean_squared_error(sequence_embedding, reconstructed_data)
 print(f"Reconstruction Error (MSE) for sequence embedding: {mse}")
 
 #Plot the explained variance and cumulative explained variance
-plt.figure(figsize=(10, 6))
-plt.bar(range(1, len(explained_variance) + 1), explained_variance, alpha=0.5, align='center', label='Explained Variance', color='blue')
-plt.step(range(1, len(explained_variance) + 1), cumulative_variance, where='mid', label='Cumulative Explained Variance', color='green')
-plt.axvline(components_to_keep, color='red', linestyle='--', label=f'95% explained variance at {components_to_keep} components')
-plt.xlabel('Number of Components')
-plt.ylabel('Explained Variance')
-plt.title('Explained Variance vs. Number of Components')
-plt.legend()
-plt.grid()
-plt.show()
+# plt.figure(figsize=(10, 6))
+# plt.bar(range(1, len(explained_variance) + 1), explained_variance, alpha=0.5, align='center', label='Explained Variance', color='blue')
+# plt.step(range(1, len(explained_variance) + 1), cumulative_variance, where='mid', label='Cumulative Explained Variance', color='green')
+# plt.axvline(components_to_keep, color='red', linestyle='--', label=f'95% explained variance at {components_to_keep} components')
+# plt.xlabel('Number of Components')
+# plt.ylabel('Explained Variance')
+# plt.title('Explained Variance vs. Number of Components')
+# plt.legend()
+# plt.grid()
+# plt.show()
 
 pca = PCA().fit(kmers)
 explained_variance = pca.explained_variance_ratio_ # Explained variance for each component
@@ -708,6 +712,9 @@ mse = mean_squared_error(kmers, reconstructed_data)
 print(f"Reconstruction Error (MSE) for kmers: {mse}")
 
 
+
+
+print(f"This is the shape of my sequences: {sequences.shape}")
 from sklearn.decomposition import SparsePCA
 components = sequences.shape[0]//6
 sparse_pca = SparsePCA(n_components=components, random_state=42)
@@ -715,6 +722,20 @@ sequences_reduced_data = sparse_pca.fit_transform(sequences)
 reconstructed_data = sparse_pca.inverse_transform(sequences_reduced_data) 
 mse = mean_squared_error(sequences, reconstructed_data) 
 print(f"Reconstruction Error (MSE) for sequences: {mse}")
+
+#Testing saved PCA model
+import joblib 
+# Save the PCA model and related information
+model_info = {
+    'pca_model': sparse_pca,
+    'original_shape': sequences.shape,
+}
+
+# Save the model info to a file
+model_info_filename = "pca_model_info.pkl"
+joblib.dump(model_info, model_info_filename)
+
+
 
 
 components = target_type.shape[0]//6
@@ -755,20 +776,36 @@ print(f"total dim: {sequences_reduced_data.shape[1] + kd.shape[1] + target_type_
 #Return features in a dictionary
 # features.py
 
-def get_features():  
+# def get_features():  
 
-    return {
-        'sequences': sequences_reduced_data,
-        'kd': kd,
-        'target_type': target_type_reduced_data,
-        'structures': aptamer_structures_reduced_data,
-        'kmers': kmers_reduced_data,
-        'sequence_embedding': sequence_embedding_reduced_data,
-        'binding_energy': binding_energies,
-        'fingerprint': fingerprints_reduced_data,
-        'molecule_properties': molecule_properties_reduced_data
-    }
+#     return {
+#         'sequences': sequences_reduced_data,
+#         'kd': kd,
+#         'target_type': target_type_reduced_data,
+#         'structures': aptamer_structures_reduced_data,
+#         'kmers': kmers_reduced_data,
+#         'sequence_embedding': sequence_embedding_reduced_data,
+#         'binding_energy': binding_energies,
+#         'fingerprint': fingerprints_reduced_data,
+#         'molecule_properties': molecule_properties_reduced_data
+#     }
 
+#Save features to a file as dictionary
+
+def save_features(sequences_reduced_data, kd, target_type_reduced_data, aptamer_structures_reduced_data, kmers_reduced_data, sequence_embedding_reduced_data, binding_energies, fingerprints_reduced_data, molecule_properties_reduced_data):
+    np.savez('features.npz', 
+             sequences=sequences_reduced_data, 
+             kd=kd, 
+             target_type=target_type_reduced_data,
+             structures=aptamer_structures_reduced_data,
+             kmers=kmers_reduced_data,
+             sequence_embedding=sequence_embedding_reduced_data,
+             binding_energy=binding_energies,
+             fingerprint=fingerprints_reduced_data,
+             molecule_properties=molecule_properties_reduced_data)
+
+# Call the function with your actual arrays
+save_features(sequences_reduced_data, kd, target_type_reduced_data, aptamer_structures_reduced_data, kmers_reduced_data, sequence_embedding_reduced_data, binding_energies, fingerprints_reduced_data, molecule_properties_reduced_data)
 
 
 
