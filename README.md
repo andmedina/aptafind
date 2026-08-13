@@ -20,6 +20,21 @@ Can sequence, predicted secondary-structure, binding-affinity, and target-molecu
 | CVAE revision | Early 2024 | Added regularization, metrics, early stopping, and deeper layers |
 | Reproducibility rebuild | Current | Validated data, explicit joins, leakage-resistant evaluation, baselines, and testing |
 
+## Research progression
+
+The research developed through three connected questions:
+
+1. **Thesis VAE — Can a model learn and generate general aptamer-like sequences?**
+   The original PyTorch VAE learned from known ssDNA aptamers using sequence, motif, structure, binding, and target-related features. It explored whether samples from a learned latent space could be decoded into plausible DNA sequences.
+
+2. **Conditional VAE — Can generation be influenced by a selected molecular target?**
+   The later TensorFlow CVAE added small-molecule descriptors and fingerprints as conditioning information. This moved the project from general aptamer-like generation toward target-aware candidate generation.
+
+3. **Reproducibility rebuild — Is there defensible predictive signal before generating candidates?**
+   The modern implementation will first validate the data, prevent leakage, evaluate interpretable baseline models, and measure generalization to unseen targets or sequence groups. Conditional generation will be revisited only after that foundation is established.
+
+The historical models generated computational candidates; they did not prove that those sequences bind to a target. Experimental assays would be required to establish binding affinity and biological utility.
+
 See [the research timeline](docs/research_timeline.md) for more detail.
 
 ## Repository organization
