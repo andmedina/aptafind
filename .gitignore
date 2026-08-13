@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+~$*
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Data: keep local until provenance and redistribution are approved
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+aptamers.json
+small[Mm]olecule*.csv
+small_molecule*.csv
+targets_feature_vector.csv
+aptamers_encoded.csv
+steroid_aptamers.csv
+
+# Generated model and feature artifacts
+*.npz
+*.pkl
+*.joblib
+*.h5
+*.keras
+checkpoints/
+models/
+artifacts/
+
+# External scientific-tool outputs and installations
+meme_clusters/
+meme_out/
+nupack-*/
+ViennaRNA-*/
+APTANI*/
+
+# Temporary and generated files
+*.tmp
+*.log
+*.bak
+*.swp
+*.swo
