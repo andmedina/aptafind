@@ -1,0 +1,745 @@
+{
+  "profile_generated_utc": "2026-08-14T02:38:00.832132+00:00",
+  "release": {
+    "dataset": "AptaBench",
+    "repository_url": "https://huggingface.co/datasets/aptabench-anonymous/AptaBench_dataset",
+    "git_revision": "e4a4623f97975ea0a0526632fa253427f29372c9",
+    "git_commit_date": "2026-05-05T23:57:26Z",
+    "license": "CC BY 4.0 (declared in Hugging Face dataset-card metadata)",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 2504,
+        "sha256": "9e75dd981de037ec3769f24f790e126bc5a160b6871f510214e68dc70649aeeb"
+      },
+      {
+        "path": "README.md",
+        "bytes": 3728,
+        "sha256": "e9846128d5decfc66052a4bf393fdf57ab982c6894df5d7e276ace2255c96b35"
+      },
+      {
+        "path": "dataset/AptaBench_dataset.csv",
+        "bytes": 1103340,
+        "sha256": "24c25fd7b514ff9b86bf14c415abb1888071a2e91a566af498659b96f5885e44"
+      },
+      {
+        "path": "dataset/AptaBench_dataset.parquet",
+        "bytes": 131,
+        "sha256": "41039de846f953e3aa22adf79f559f6cac9e62888ee82051dd5834ae379ba5c8",
+        "git_lfs_pointer": true,
+        "lfs_sha256": "6f8b01685137cc495b35b50681eccf6e1fd4ade476b13067462ea5f2d6cc4459",
+        "lfs_bytes": 112730
+      },
+      {
+        "path": "dataset/make_splits.py",
+        "bytes": 2749,
+        "sha256": "8c9e8fd6f99dc88c3ecdcaef2c7bdc742ea6d22fda3091e6598108bba73b5128"
+      },
+      {
+        "path": "dataset/splits/disjoint_aptamer.json",
+        "bytes": 403628,
+        "sha256": "b15938cb6e1bf34599bb21c5a36be6b04e01dc7f59a581eaa42d149f07987ef0"
+      },
+      {
+        "path": "dataset/splits/disjoint_molecule.json",
+        "bytes": 403628,
+        "sha256": "0c8b28a6c669fdb853d7dbe4618064aef28825ca4f7e82d257e8f0128ee6da8b"
+      },
+      {
+        "path": "dataset/splits/stratified.json",
+        "bytes": 403628,
+        "sha256": "a91c5ad5241824d6decf204e6fce78fac5456b712ca5d7b40a6f2249779fcf25"
+      },
+      {
+        "path": "logo.png",
+        "bytes": 132,
+        "sha256": "39378d6f2eba3cf70d50c80887b97b3a365721a4a0a1084f165a290152069bc6",
+        "git_lfs_pointer": true,
+        "lfs_sha256": "c339552331cd29a39947849a2ebcd9d2b0b7c948267e4b750178c08d60df247f",
+        "lfs_bytes": 1112870
+      }
+    ]
+  },
+  "schema": [
+    {
+      "name": "type",
+      "dtype": "str"
+    },
+    {
+      "name": "sequence",
+      "dtype": "str"
+    },
+    {
+      "name": "canonical_smiles",
+      "dtype": "str"
+    },
+    {
+      "name": "pKd_value",
+      "dtype": "float64"
+    },
+    {
+      "name": "label",
+      "dtype": "int64"
+    },
+    {
+      "name": "buffer",
+      "dtype": "str"
+    },
+    {
+      "name": "origin",
+      "dtype": "str"
+    },
+    {
+      "name": "source",
+      "dtype": "str"
+    }
+  ],
+  "overall": {
+    "records": 6289,
+    "unique_normalized_aptamers": 1610,
+    "unique_ligands": 942,
+    "type_counts": {
+      "DNA": 4721,
+      "RNA": 1568
+    },
+    "source_counts": {
+      "Specificity": 3582,
+      "RSAPred": 1141,
+      "Manual": 639,
+      "AptaDB": 320,
+      "Aptamer Base": 289,
+      "AptaGen": 154,
+      "UTexas": 101,
+      "Ribocentre": 63
+    },
+    "label_counts": {
+      "1": 3240,
+      "0": 3049
+    },
+    "quantitative_affinity_records": 2087,
+    "publication_units_nonmissing": 397,
+    "records_missing_publication_unit": 1157,
+    "missing_values": {
+      "type": 0,
+      "sequence": 0,
+      "canonical_smiles": 0,
+      "pKd_value": 4202,
+      "label": 0,
+      "buffer": 1533,
+      "origin": 1157,
+      "source": 0
+    },
+    "exact_duplicate_rows": 0,
+    "repeated_sequence_ligand_pairs": 208,
+    "records_beyond_one_per_pair": 237,
+    "pairs_with_conflicting_labels": 23,
+    "quantitative_pairs_with_multiple_values": 100,
+    "sequence_family_sensitivity": {
+      "0.80": {
+        "clusters": 1009,
+        "largest_cluster": 46,
+        "multi_sequence_clusters": 164
+      },
+      "0.90": {
+        "clusters": 1220,
+        "largest_cluster": 38,
+        "multi_sequence_clusters": 134
+      },
+      "0.95": {
+        "clusters": 1348,
+        "largest_cluster": 31,
+        "multi_sequence_clusters": 112
+      }
+    }
+  },
+  "dna_only": {
+    "records": 4721,
+    "unique_normalized_aptamers": 1065,
+    "unique_ligands": 314
+  },
+  "steroid_structural_subset": {
+    "definition": "RDKit ring-topology screen for an all-carbon, 17-atom nucleus of exactly four path-fused rings sized 6-6-6-5",
+    "records": 79,
+    "dna_records": 78,
+    "unique_normalized_aptamers": 67,
+    "unique_ligands": 12,
+    "unique_connectivity_targets": 9,
+    "positive_records": 69,
+    "negative_records": 10,
+    "quantitative_affinity_records": 40,
+    "publication_units_nonmissing": 22,
+    "records_missing_publication_unit": 5,
+    "target_family_pairs_90pct": 61,
+    "sequence_family_sensitivity": {
+      "0.80": {
+        "clusters": 59,
+        "largest_cluster": 3,
+        "multi_sequence_clusters": 6
+      },
+      "0.90": {
+        "clusters": 61,
+        "largest_cluster": 3,
+        "multi_sequence_clusters": 4
+      },
+      "0.95": {
+        "clusters": 62,
+        "largest_cluster": 3,
+        "multi_sequence_clusters": 4
+      }
+    },
+    "ligands": [
+      {
+        "canonical_smiles": "CC(=O)C1=CCC2C3CCC4=CC(=O)C=CC4(C)C3=CCC12C",
+        "connectivity_smiles": "CC(=O)C1=CCC2C3CCC4=CC(=O)C=CC4(C)C3=CCC12C",
+        "name": "Desoxy-tetraene steroid derivative",
+        "pubchem_cid": 14605222,
+        "records": 1,
+        "unique_sequences": 1,
+        "positive_records": 1,
+        "negative_records": 0,
+        "quantitative_affinity_records": 1,
+        "publication_units": 0,
+        "sources": [
+          "RSAPred"
+        ]
+      },
+      {
+        "canonical_smiles": "CC(=O)C1CCC2C3CCC4=CC(=O)CCC4(C)C3CCC12C",
+        "connectivity_smiles": "CC(=O)C1CCC2C3CCC4=CC(=O)CCC4(C)C3CCC12C",
+        "name": "Progesterone (stereochemistry unspecified)",
+        "pubchem_cid": 4920,
+        "records": 5,
+        "unique_sequences": 5,
+        "positive_records": 5,
+        "negative_records": 0,
+        "quantitative_affinity_records": 0,
+        "publication_units": 1,
+        "sources": [
+          "AptaDB"
+        ]
+      },
+      {
+        "canonical_smiles": "CC(=O)[C@H]1CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@]12C",
+        "connectivity_smiles": "CC(=O)C1CCC2C3CCC4=CC(=O)CCC4(C)C3CCC12C",
+        "name": "Progesterone",
+        "pubchem_cid": 5994,
+        "records": 7,
+        "unique_sequences": 7,
+        "positive_records": 7,
+        "negative_records": 0,
+        "quantitative_affinity_records": 7,
+        "publication_units": 2,
+        "sources": [
+          "Manual"
+        ]
+      },
+      {
+        "canonical_smiles": "CC(CCC(=O)O)C1CCC2C3C(O)CC4CC(O)CCC4(C)C3CC(O)C12C",
+        "connectivity_smiles": "CC(CCC(=O)O)C1CCC2C3C(O)CC4CC(O)CCC4(C)C3CC(O)C12C",
+        "name": "Ox bile extract / cholic-acid connectivity (stereochemistry unspecified)",
+        "pubchem_cid": 303,
+        "records": 13,
+        "unique_sequences": 12,
+        "positive_records": 13,
+        "negative_records": 0,
+        "quantitative_affinity_records": 8,
+        "publication_units": 2,
+        "sources": [
+          "AptaDB",
+          "AptaGen",
+          "Aptamer Base"
+        ]
+      },
+      {
+        "canonical_smiles": "CC12CCC(=O)C=C1CCC1C2C(O)CC2(C)C1CCC2(O)C(=O)CO",
+        "connectivity_smiles": "CC12CCC(=O)C=C1CCC1C2C(O)CC2(C)C1CCC2(O)C(=O)CO",
+        "name": "Cortisol (stereochemistry unspecified)",
+        "pubchem_cid": 3640,
+        "records": 4,
+        "unique_sequences": 4,
+        "positive_records": 4,
+        "negative_records": 0,
+        "quantitative_affinity_records": 3,
+        "publication_units": 3,
+        "sources": [
+          "AptaDB",
+          "AptaGen",
+          "UTexas"
+        ]
+      },
+      {
+        "canonical_smiles": "CC12CCC3c4ccc(O)cc4CCC3C1CCC2O",
+        "connectivity_smiles": "CC12CCC3c4ccc(O)cc4CCC3C1CCC2O",
+        "name": "Estradiol connectivity (stereochemistry unspecified)",
+        "pubchem_cid": 450,
+        "records": 9,
+        "unique_sequences": 8,
+        "positive_records": 9,
+        "negative_records": 0,
+        "quantitative_affinity_records": 4,
+        "publication_units": 7,
+        "sources": [
+          "AptaDB",
+          "AptaGen"
+        ]
+      },
+      {
+        "canonical_smiles": "CC1OC(OC2C(O)CC(OC3C(O)CC(OC4CCC5(C)C(CCC6C5CC(O)C5(C)C(C7=CC(=O)OC7)CCC65O)C4)OC3C)OC2C)CC(O)C1O",
+        "connectivity_smiles": "CC1OC(OC2C(O)CC(OC3C(O)CC(OC4CCC5(C)C(CCC6C5CC(O)C5(C)C(C7=CC(=O)OC7)CCC65O)C4)OC3C)OC2C)CC(O)C1O",
+        "name": "Lanicor (cardiac glycoside)",
+        "pubchem_cid": 3062,
+        "records": 11,
+        "unique_sequences": 6,
+        "positive_records": 11,
+        "negative_records": 0,
+        "quantitative_affinity_records": 5,
+        "publication_units": 1,
+        "sources": [
+          "AptaDB",
+          "Aptamer Base",
+          "UTexas"
+        ]
+      },
+      {
+        "canonical_smiles": "C[C@H](CCC(=O)O)[C@H]1CC[C@H]2[C@@H]3[C@H](O)C[C@@H]4C[C@H](O)CC[C@]4(C)[C@H]3C[C@H](O)[C@]12C",
+        "connectivity_smiles": "CC(CCC(=O)O)C1CCC2C3C(O)CC4CC(O)CCC4(C)C3CC(O)C12C",
+        "name": "Cholic acid",
+        "pubchem_cid": 221493,
+        "records": 1,
+        "unique_sequences": 1,
+        "positive_records": 1,
+        "negative_records": 0,
+        "quantitative_affinity_records": 0,
+        "publication_units": 1,
+        "sources": [
+          "Manual"
+        ]
+      },
+      {
+        "canonical_smiles": "C[C@]12CC[C@@H]3c4ccc(O)cc4CC[C@H]3[C@@H]1CC[C@@H]2O",
+        "connectivity_smiles": "CC12CCC3c4ccc(O)cc4CCC3C1CCC2O",
+        "name": "Estradiol",
+        "pubchem_cid": 5757,
+        "records": 1,
+        "unique_sequences": 1,
+        "positive_records": 1,
+        "negative_records": 0,
+        "quantitative_affinity_records": 1,
+        "publication_units": 1,
+        "sources": [
+          "Manual"
+        ]
+      },
+      {
+        "canonical_smiles": "C[C@]12CC[C@H](OS(=O)(=O)O)CC1=CC[C@@H]1[C@@H]2CC[C@]2(C)C(=O)CC[C@@H]12",
+        "connectivity_smiles": "CC12CCC3C(CC=C4CC(OS(=O)(=O)O)CCC43C)C1CCC2=O",
+        "name": "Dehydroepiandrosterone sulfate",
+        "pubchem_cid": 12594,
+        "records": 14,
+        "unique_sequences": 14,
+        "positive_records": 4,
+        "negative_records": 10,
+        "quantitative_affinity_records": 0,
+        "publication_units": 2,
+        "sources": [
+          "Manual",
+          "Specificity"
+        ]
+      },
+      {
+        "canonical_smiles": "C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@H]43)[C@@H]1CC[C@@H]2O",
+        "connectivity_smiles": "CC12CCC3C4CCC(=O)C=C4CCC3C1CCC2O",
+        "name": "Nandrolone",
+        "pubchem_cid": 9904,
+        "records": 2,
+        "unique_sequences": 2,
+        "positive_records": 2,
+        "negative_records": 0,
+        "quantitative_affinity_records": 0,
+        "publication_units": 1,
+        "sources": [
+          "Manual"
+        ]
+      },
+      {
+        "canonical_smiles": "C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@]43C)[C@@H]1CC[C@@H]2O",
+        "connectivity_smiles": "CC12CCC(=O)C=C1CCC1C2CCC2(C)C(O)CCC12",
+        "name": "Testosterone",
+        "pubchem_cid": 6013,
+        "records": 11,
+        "unique_sequences": 11,
+        "positive_records": 11,
+        "negative_records": 0,
+        "quantitative_affinity_records": 11,
+        "publication_units": 2,
+        "sources": [
+          "Manual"
+        ]
+      }
+    ],
+    "connectivity_targets": [
+      {
+        "connectivity_smiles": "CC(=O)C1=CCC2C3CCC4=CC(=O)C=CC4(C)C3=CCC12C",
+        "names": [
+          "Desoxy-tetraene steroid derivative"
+        ],
+        "smiles_variants": 1,
+        "records": 1,
+        "unique_sequences": 1,
+        "sequence_families_90pct": 1,
+        "positive_records": 1,
+        "negative_records": 0,
+        "quantitative_affinity_records": 1,
+        "provisional_publication_units": 0,
+        "records_missing_origin": 1
+      },
+      {
+        "connectivity_smiles": "CC(=O)C1CCC2C3CCC4=CC(=O)CCC4(C)C3CCC12C",
+        "names": [
+          "Progesterone",
+          "Progesterone (stereochemistry unspecified)"
+        ],
+        "smiles_variants": 2,
+        "records": 12,
+        "unique_sequences": 7,
+        "sequence_families_90pct": 7,
+        "positive_records": 12,
+        "negative_records": 0,
+        "quantitative_affinity_records": 7,
+        "provisional_publication_units": 3,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC(CCC(=O)O)C1CCC2C3C(O)CC4CC(O)CCC4(C)C3CC(O)C12C",
+        "names": [
+          "Cholic acid",
+          "Ox bile extract / cholic-acid connectivity (stereochemistry unspecified)"
+        ],
+        "smiles_variants": 2,
+        "records": 14,
+        "unique_sequences": 13,
+        "sequence_families_90pct": 12,
+        "positive_records": 14,
+        "negative_records": 0,
+        "quantitative_affinity_records": 8,
+        "provisional_publication_units": 3,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC12CCC(=O)C=C1CCC1C2C(O)CC2(C)C1CCC2(O)C(=O)CO",
+        "names": [
+          "Cortisol (stereochemistry unspecified)"
+        ],
+        "smiles_variants": 1,
+        "records": 4,
+        "unique_sequences": 4,
+        "sequence_families_90pct": 2,
+        "positive_records": 4,
+        "negative_records": 0,
+        "quantitative_affinity_records": 3,
+        "provisional_publication_units": 3,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC12CCC(=O)C=C1CCC1C2CCC2(C)C(O)CCC12",
+        "names": [
+          "Testosterone"
+        ],
+        "smiles_variants": 1,
+        "records": 11,
+        "unique_sequences": 11,
+        "sequence_families_90pct": 11,
+        "positive_records": 11,
+        "negative_records": 0,
+        "quantitative_affinity_records": 11,
+        "provisional_publication_units": 2,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC12CCC3C(CC=C4CC(OS(=O)(=O)O)CCC43C)C1CCC2=O",
+        "names": [
+          "Dehydroepiandrosterone sulfate"
+        ],
+        "smiles_variants": 1,
+        "records": 14,
+        "unique_sequences": 14,
+        "sequence_families_90pct": 11,
+        "positive_records": 4,
+        "negative_records": 10,
+        "quantitative_affinity_records": 0,
+        "provisional_publication_units": 2,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC12CCC3C4CCC(=O)C=C4CCC3C1CCC2O",
+        "names": [
+          "Nandrolone"
+        ],
+        "smiles_variants": 1,
+        "records": 2,
+        "unique_sequences": 2,
+        "sequence_families_90pct": 2,
+        "positive_records": 2,
+        "negative_records": 0,
+        "quantitative_affinity_records": 0,
+        "provisional_publication_units": 1,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC12CCC3c4ccc(O)cc4CCC3C1CCC2O",
+        "names": [
+          "Estradiol",
+          "Estradiol connectivity (stereochemistry unspecified)"
+        ],
+        "smiles_variants": 2,
+        "records": 10,
+        "unique_sequences": 9,
+        "sequence_families_90pct": 9,
+        "positive_records": 10,
+        "negative_records": 0,
+        "quantitative_affinity_records": 5,
+        "provisional_publication_units": 8,
+        "records_missing_origin": 0
+      },
+      {
+        "connectivity_smiles": "CC1OC(OC2C(O)CC(OC3C(O)CC(OC4CCC5(C)C(CCC6C5CC(O)C5(C)C(C7=CC(=O)OC7)CCC65O)C4)OC3C)OC2C)CC(O)C1O",
+        "names": [
+          "Lanicor (cardiac glycoside)"
+        ],
+        "smiles_variants": 1,
+        "records": 11,
+        "unique_sequences": 6,
+        "sequence_families_90pct": 6,
+        "positive_records": 11,
+        "negative_records": 0,
+        "quantitative_affinity_records": 5,
+        "provisional_publication_units": 1,
+        "records_missing_origin": 4
+      }
+    ]
+  },
+  "fixed_split_audit": {
+    "disjoint_aptamer": {
+      "file": "disjoint_aptamer.json",
+      "folds": [
+        {
+          "fold": 0,
+          "train_records": 5170,
+          "validation_records": 1119,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 0,
+          "exact_ligand_overlap": 222,
+          "sequence_family_overlap": {
+            "0.80": 1,
+            "0.90": 0,
+            "0.95": 0
+          }
+        },
+        {
+          "fold": 1,
+          "train_records": 5170,
+          "validation_records": 1119,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 0,
+          "exact_ligand_overlap": 214,
+          "sequence_family_overlap": {
+            "0.80": 0,
+            "0.90": 0,
+            "0.95": 0
+          }
+        },
+        {
+          "fold": 2,
+          "train_records": 5171,
+          "validation_records": 1118,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 0,
+          "exact_ligand_overlap": 188,
+          "sequence_family_overlap": {
+            "0.80": 1,
+            "0.90": 0,
+            "0.95": 0
+          }
+        },
+        {
+          "fold": 3,
+          "train_records": 4747,
+          "validation_records": 1542,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 0,
+          "exact_ligand_overlap": 39,
+          "sequence_family_overlap": {
+            "0.80": 0,
+            "0.90": 0,
+            "0.95": 0
+          }
+        },
+        {
+          "fold": 4,
+          "train_records": 4898,
+          "validation_records": 1391,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 0,
+          "exact_ligand_overlap": 56,
+          "sequence_family_overlap": {
+            "0.80": 0,
+            "0.90": 0,
+            "0.95": 0
+          }
+        }
+      ]
+    },
+    "disjoint_molecule": {
+      "file": "disjoint_molecule.json",
+      "folds": [
+        {
+          "fold": 0,
+          "train_records": 4992,
+          "validation_records": 1297,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 216,
+          "exact_ligand_overlap": 0,
+          "sequence_family_overlap": {
+            "0.80": 96,
+            "0.90": 149,
+            "0.95": 158
+          }
+        },
+        {
+          "fold": 1,
+          "train_records": 5041,
+          "validation_records": 1248,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 312,
+          "exact_ligand_overlap": 0,
+          "sequence_family_overlap": {
+            "0.80": 177,
+            "0.90": 234,
+            "0.95": 250
+          }
+        },
+        {
+          "fold": 2,
+          "train_records": 5041,
+          "validation_records": 1248,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 325,
+          "exact_ligand_overlap": 0,
+          "sequence_family_overlap": {
+            "0.80": 189,
+            "0.90": 240,
+            "0.95": 256
+          }
+        },
+        {
+          "fold": 3,
+          "train_records": 5041,
+          "validation_records": 1248,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 271,
+          "exact_ligand_overlap": 0,
+          "sequence_family_overlap": {
+            "0.80": 151,
+            "0.90": 203,
+            "0.95": 218
+          }
+        },
+        {
+          "fold": 4,
+          "train_records": 5041,
+          "validation_records": 1248,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 301,
+          "exact_ligand_overlap": 0,
+          "sequence_family_overlap": {
+            "0.80": 168,
+            "0.90": 220,
+            "0.95": 236
+          }
+        }
+      ]
+    },
+    "stratified": {
+      "file": "stratified.json",
+      "folds": [
+        {
+          "fold": 0,
+          "train_records": 5033,
+          "validation_records": 1256,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 352,
+          "exact_ligand_overlap": 237,
+          "sequence_family_overlap": {
+            "0.80": 242,
+            "0.90": 294,
+            "0.95": 308
+          }
+        },
+        {
+          "fold": 1,
+          "train_records": 5039,
+          "validation_records": 1250,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 363,
+          "exact_ligand_overlap": 235,
+          "sequence_family_overlap": {
+            "0.80": 255,
+            "0.90": 302,
+            "0.95": 313
+          }
+        },
+        {
+          "fold": 2,
+          "train_records": 5026,
+          "validation_records": 1263,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 354,
+          "exact_ligand_overlap": 229,
+          "sequence_family_overlap": {
+            "0.80": 253,
+            "0.90": 305,
+            "0.95": 314
+          }
+        },
+        {
+          "fold": 3,
+          "train_records": 5038,
+          "validation_records": 1251,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 338,
+          "exact_ligand_overlap": 228,
+          "sequence_family_overlap": {
+            "0.80": 228,
+            "0.90": 277,
+            "0.95": 289
+          }
+        },
+        {
+          "fold": 4,
+          "train_records": 5020,
+          "validation_records": 1269,
+          "index_overlap": 0,
+          "exact_sequence_overlap": 331,
+          "exact_ligand_overlap": 225,
+          "sequence_family_overlap": {
+            "0.80": 231,
+            "0.90": 282,
+            "0.95": 291
+          }
+        }
+      ]
+    }
+  },
+  "planned_pretraining_overlap": {
+    "dl_selex_publication_doi": "10.1093/bib/bbaf680",
+    "matching_endpoint_records": 0,
+    "sequence_level_status": "unresolved until a derived unique-sequence inventory is produced from the planned DL-SELEX data"
+  },
+  "limitations": [
+    "AptaBench has no explicit ligand-name or chemical-class column.",
+    "The structurally screened identities were checked with PubChem, but their biological roles and experimental units still require source-publication review.",
+    "Origin is absent for some records and is not equivalent to a verified experiment ID.",
+    "Edit-identity single-linkage clusters are a sensitivity proxy, not curated biological lineages.",
+    "Sequence-level pretraining overlap cannot be resolved from publication metadata alone."
+  ]
+}

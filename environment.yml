@@ -1,0 +1,12 @@
+name: aptafind
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - pyyaml
+  - rapidfuzz
+  - rdkit
+  - pytest
+

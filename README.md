@@ -41,10 +41,12 @@ See [the research timeline](docs/research_timeline.md) for more detail.
 
 ```text
 aptafind/
+├── data_lake/    # local-only immutable and derived research data zones
 ├── historical/   # curated research prototypes preserved as written
-├── docs/         # recovery, architecture, limitations, and rebuild plans
-├── src/          # planned modern implementation
-└── tests/        # planned validation and feature tests
+├── manifests/    # frozen dataset identities, checksums, and registries
+├── reports/      # machine-readable profiling results
+├── src/          # modern reproducible implementation
+└── tests/        # automated profiling and chemistry checks
 ```
 
 The legacy files currently visible at the repository root are retained from the original Git history. The curated versions under `historical/` provide the intended narrative while the modern implementation is built separately.
@@ -81,11 +83,47 @@ Detailed maps:
 - [Recovered historical assets](docs/historical_asset_recovery.md)
 - [Aptafind v2 design proposal](docs/aptafind_v2_design.md)
 
+## Current research direction
+
+The near-term study asks:
+
+> Does multi-round HT-SELEX trajectory information provide transferable supervision that improves aptamer-small-molecule endpoint prediction beyond matched generic pretraining?
+
+The planned controlled comparison is:
+
+- Model A: endpoint-only training
+- Model B: intact SELEX-trajectory pretraining plus identical endpoint training
+- Model C: matched non-trajectory pretraining plus identical endpoint training
+
+The primary scientific comparison is Model B versus Model C. See the [research charter](docs/research_charter.md), [development gates](docs/development_gates.md), and [proposed architecture](docs/proposed_model_architecture.md).
+
 ## Current status
 
-Historical assets have been located, inventoried, and checksummed. Selected prototypes have been curated into dated directories with explanatory documentation.
+Historical assets have been located, inventoried, and checksummed. The first modern data gate has begun with an immutable AptaBench release at Git revision `e4a4623f97975ea0a0526632fa253427f29372c9`.
 
-The current code is not yet a one-command reproducible pipeline. The next implementation milestone is to create a canonical validated dataset, stable record identifiers, explicit target joins, reproducible sequence features, and automated tests before retraining any model.
+The [Frozen AptaBench Profile Report](docs/aptabench_frozen_profile.md) found:
+
+- 6,289 total interactions, 1,610 aptamers, and 942 ligands
+- 79 structurally screened steroid records
+- 9 steroid connectivity-level targets and 61 sequence families at 90% identity
+- only 10 steroid negative records, all associated with one target connectivity
+
+This supports general small-molecule endpoint modeling, but not yet a rigorous steroid-only Model A/B/C comparison. Gate 1A (benchmark characterization) is complete. Gate 1B (cross-dataset independence) is in progress.
+
+Model development is blocked and large FASTQ acquisition is deferred until Gate 1B establishes publication, sequence, family, assay, source, affinity, and ligand-identity independence between pretraining and evaluation data.
+
+Reproduce the profile after placing the frozen AptaBench repository in the documented Bronze location:
+
+```bash
+conda env create -f environment.yml
+conda activate aptafind
+python -m pip install --no-deps -e .
+python -m pytest -q
+python -m aptafind.data.aptabench_profile \
+  --repository data_lake/bronze/aptabench_current_review_release/repository
+```
+
+The next milestone is publication-level verification of the steroid evidence units and a sequence-only overlap inventory from the planned DL-SELEX sources. Model development remains gated on those results.
 
 ## Scientific and technical limitations
 

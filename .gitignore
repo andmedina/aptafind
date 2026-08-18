@@ -37,6 +37,12 @@ targets_feature_vector.csv
 aptamers_encoded.csv
 steroid_aptamers.csv
 
+# Research lake: source and generated data remain outside Git
+data_lake/bronze/
+data_lake/silver/
+data_lake/gold/
+!data_lake/README.md
+
 # Generated model and feature artifacts
 *.npz
 *.pkl
