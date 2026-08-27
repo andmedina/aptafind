@@ -16,7 +16,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest"]
+generation = ["torch"]
+test = ["pytest", "torch"]
+
+[project.scripts]
+aptafind-generate = "aptafind.generation.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

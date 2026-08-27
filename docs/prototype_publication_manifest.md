@@ -1,16 +1,19 @@
-# Aptafind Prototype Publication Manifest
+# Aptafind Historical Publication Manifest
 
 ## Purpose
 
-This manifest proposes how to present Aptafind's research history without copying every temporary file into the public repository. It is a review document only; no historical files have been copied or reorganized yet.
+This manifest records how Aptafind's research history is presented without
+copying every temporary dataset or generated artifact into the public
+repository. The curated reorganization is complete; supported code remains
+separate under `src/aptafind/`.
 
-## Recommended research timeline
+## Published research timeline
 
 ### Prototype 1: Thesis VAE — Spring 2023
 
 **Purpose:** Initial feature-engineering pipeline and PyTorch variational autoencoder developed for the master's thesis.
 
-**Recommended public directory:**
+**Published directory:**
 
 ```text
 historical/thesis_vae_2023/
@@ -18,7 +21,7 @@ historical/thesis_vae_2023/
 └── features.ipynb
 ```
 
-**Proposed source:**
+**Source:**
 
 | Published file | Historical source | Reason |
 |---|---|---|
@@ -39,16 +42,23 @@ The thesis can be linked through its DOI rather than duplicated if that is the p
 
 **Purpose:** Show the transition from the thesis dataset toward small-molecule conditioning, structural features, target descriptors, and sequence-generation experiments.
 
-This phase is scientifically useful, but publishing every intermediate script would create clutter. Preserve it primarily through Git history and summarize it in a timeline document.
+This phase is scientifically useful, but publishing every recovered temporary
+file would create clutter. The curated directory includes the unique source
+artifacts that remained at the repository root; Git history preserves their
+earlier evolution.
 
-**Recommended public directory:**
+**Published directory:**
 
 ```text
 historical/feature_experiments_2023/
-└── README.md
+├── README.md
+├── features.ipynb
+├── features_v2.py
+├── generateSequence.py
+└── utilities/
 ```
 
-The README should discuss:
+The README documents:
 
 - Small-molecule dataset expansion
 - NUPACK secondary-structure integration
@@ -57,21 +67,21 @@ The README should discuss:
 - PubChem target descriptors and fingerprints
 - Progression from `features_v2.py` to `features_v3.py`
 
-**Optional representative files:**
+**Artifact placement:**
 
-| File | Include? | Reason |
-|---|---:|---|
-| `features_v2.py` | Optional | Representative intermediate feature revision already preserved in Git |
-| `sequenceMotif.py` | Prefer shared utility | Documents MEME integration |
-| `structureMotif.py` | Prefer shared utility | Documents NUPACK integration |
-| `targetFeature.py` | Prefer CVAE prototype | Direct producer of target features used by the later model |
-| `generateSequence.py` | Optional | Experimental generation helper; not part of the verified final execution path |
+| File | Published with | Reason |
+|---|---|---|
+| `features_v2.py` | Feature experiments | Representative intermediate feature revision |
+| `generateSequence.py` | Feature experiments | Unique experimental generation helper |
+| `sequenceMotif.py` | TensorFlow CVAE | Documents MEME integration used by the integrated feature pipeline |
+| `structureMotif.py` | TensorFlow CVAE | Documents NUPACK integration used by the integrated feature pipeline |
+| `targetFeature.py` | TensorFlow CVAE | Direct producer of the later model's target features |
 
 ### Prototype 3: Conditional VAE — Late 2023/early 2024
 
 **Purpose:** Integrate ssDNA features and small-molecule descriptors in a TensorFlow/Keras conditional VAE.
 
-**Recommended public directory:**
+**Published directory:**
 
 ```text
 historical/tensorflow_cvae_2023/
@@ -85,25 +95,27 @@ historical/tensorflow_cvae_2023/
     └── to_fasta_file.py
 ```
 
-**Proposed sources:**
+**Sources:**
 
 | Published file | Preferred source | Note |
 |---|---|---|
-| `cvae.py` | Public Git commit `c8fbc68` initially; compare with recovered February 2024 local version | The two versions differ and should not be silently combined |
-| `features_v3.py` | Public Git commit `c8fbc68` or recovered December file after checksum comparison | Produces `features.npz` |
+| `cvae.py` | Public Git commit `c8fbc68` | December prototype; the different February revision is preserved separately |
+| `features_v3.py` | Public Git commit `c8fbc68` | Produces `features.npz` |
 | `targetFeature.py` | Public tracked version | Produces `targets_feature_vector.csv` |
 | `structureMotif.py` | Public tracked version | NUPACK interface |
 | `sequenceMotif.py` | Public tracked version | MEME interface; feature use is commented out in `features_v3.py` |
 | `to_fasta_file.py` | Public tracked version | FASTA conversion utility |
 | `README.md` | New explanatory document | Documents architecture, data flow, execution status, results, and limitations |
 
-The recovered February 2024 `cvae.py` should first be diffed against the December Git version. If it contains meaningful later work, publish it as a separately identified revision rather than overwriting the committed prototype.
+The recovered February 2024 `cvae.py` was compared against the December Git
+version and published as `historical/tensorflow_cvae_2024_revision/cvae.py`
+rather than overwriting the committed prototype.
 
 ### Current work: Reproducibility rebuild
 
 **Purpose:** Build a tested, leakage-resistant, reproducible pipeline while preserving all historical prototypes.
 
-**Recommended public directory:**
+**Published directory:**
 
 ```text
 src/aptafind/
@@ -120,10 +132,13 @@ docs/
 ├── feature_pipeline_map.md
 ├── cvae_model_map.md
 ├── aptafind_v2_design.md
-└── research_timeline.md          # create during reorganization
+├── research_timeline.md
+├── thesis_sequence_generation_pipeline.md
+└── thesis_cvae_retrospective_run.md
 ```
 
-The recovery inventory contains local absolute paths and may be better retained on a private branch or rewritten with portable path labels before public release.
+The public recovery inventory uses portable labels rather than local absolute
+paths. Raw data and generated artifacts remain outside Git.
 
 ## Files and directories to exclude
 
@@ -190,20 +205,21 @@ Recommended tags after the structure is reviewed:
 
 A tag is a stable human-readable label attached to a historical commit; it does not copy or modify that commit.
 
-## Proposed copy sequence
+## Completed organization checks
 
-No copying should begin until this manifest is approved.
+1. Exported the April 2023 notebook from Git into
+   `historical/thesis_vae_2023/`.
+2. Added explanatory READMEs for each historical phase.
+3. Preserved the unique late-2023 notebook and helpers under
+   `historical/feature_experiments_2023/`.
+4. Compared root-level CVAE sources against their curated copies using SHA-256
+   and consolidated only byte-identical duplicates.
+5. Preserved the February 2024 CVAE as a separate revision.
+6. Recovered the unique unfinished 2026 refactor file into its own WIP archive.
+7. Added protective ignore rules for raw data, model artifacts, generated
+   candidates, and local build outputs.
+8. Kept the reorganization in normal Git history without rewriting commits.
 
-1. Export the April 2023 notebook from Git into `historical/thesis_vae_2023/`.
-2. Add its explanatory README.
-3. Create the feature-experiment timeline README without copying all intermediates.
-4. Copy the selected tracked CVAE prototype files into its historical directory.
-5. Compare the recovered February 2024 CVAE against the committed December version.
-6. Add the CVAE prototype README with limitations.
-7. Add protective `.gitignore` rules before introducing any data directories.
-8. Verify that no raw datasets or large artifacts are staged.
-9. Review the complete diff before committing.
-
-## Recommendation
+## Publication policy
 
 Publish the curated prototypes and their scientific narrative, not the entire recovered filesystem. This preserves authenticity while keeping the repository understandable to researchers, employers, and future contributors.

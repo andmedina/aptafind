@@ -4,7 +4,9 @@
 
 This document records the historical Aptafind datasets, generated features, model artifacts, code versions, and external-tool outputs recovered from the local filesystem. It is an inventory, not a claim that the historical workflow is currently reproducible.
 
-The recovered files remain in their original locations. Nothing was moved or modified during discovery.
+The recovered datasets and generated artifacts remain in their original archive
+locations. Curated historical source copies are now organized under
+`historical/`; source files were not rewritten during recovery.
 
 ## Primary locations
 
@@ -12,7 +14,7 @@ The recovered files remain in their original locations. Nothing was moved or mod
 |---|---|
 | `historical workspace: generativeModel` | Original feature-engineering and generative-model workspace, datasets, artifacts, and outputs |
 | `this repository` | Public Git repository clone |
-| `separate modernization workspace` | Later, incomplete modernization attempt; preserve separately |
+| `historical/refactor_cleanup_2026` | Unique source recovered from a later incomplete modernization attempt |
 | `historical workspace: secondaryStructureTools` | Secondary-structure and MEME-related tooling/output |
 | `historical workspace: aptani` | APTANI installation, inputs, and outputs |
 | `local thesis and workflow archive` | Thesis and workflow documentation |
@@ -79,9 +81,12 @@ The recovered archive contains 168 samples:
 | Thesis-era, early 2023 | `features.ipynb`, `features.py`, `vae.py` | Original PyTorch VAE and feature pipeline described by the thesis |
 | Expansion, mid-2023 | `features_working.py`, `features_v2.py`, motif/structure modules | Dataset expansion and additional feature experiments |
 | Later prototype, late 2023 | `features_v3.py`, `targetFeature.py`, `cvae.py` | 168-sample integrated feature matrix and TensorFlow conditional VAE experiment |
-| Modernization attempt | `separate modernization workspace` | Later package-structure refactor; incomplete and should not replace the historical snapshot |
+| Modernization attempt | `historical/refactor_cleanup_2026/feature_pipeline.py` | Later package-structure refactor; incomplete and retained only as historical WIP |
 
-The public repository mixes files from more than one phase. The thesis-era VAE and later CVAE should therefore be documented as distinct experiments rather than one uninterrupted, fully reproducible workflow.
+The repository previously mixed files from more than one phase at its root.
+They are now separated into dated historical directories so the thesis-era VAE,
+later CVAE, and modern implementation are not presented as one uninterrupted
+experiment.
 
 ## Compatibility and reproducibility notes
 
@@ -101,15 +106,20 @@ Do not commit the recovered raw Aptagen-derived dataset to a public repository u
 3. Add instructions for authorized users to place the complete dataset locally.
 4. Exclude private or restricted raw data and generated artifacts through `.gitignore` where appropriate.
 
-## Recommended recovery sequence
+## Recovery progress
 
-1. Preserve `historical workspace: generativeModel` as the immutable historical snapshot.
-2. Calculate checksums and create a manifest for the core datasets and artifacts.
-3. Map every feature in `features.npz` back to its transformation in `features_v3.py`.
-4. Separate the thesis-era VAE from the later CVAE in the documentation.
-5. Reconstruct a clean environment using pinned dependency versions.
-6. Rebuild the pipeline in stages: raw data, cleaning, feature engineering, external-tool integration, model training, and evaluation.
-7. Compare regenerated outputs against the recovered artifacts before calling the workflow reproducible.
+Completed:
+
+1. Preserved the historical workspace as the immutable data-and-artifact snapshot.
+2. Calculated checksums for the core datasets, artifacts, and source versions.
+3. Mapped every array in `features.npz` to the historical feature pipeline.
+4. Separated the thesis VAE, feature experiments, TensorFlow CVAE, later
+   revision, and unfinished refactor in the public documentation.
+5. Created and tested a clean PyTorch environment and modern
+   train–evaluate–generate workflow.
+
+Remaining research work includes deeper raw-data provenance reconstruction,
+repeated group-aware evaluation, and secondary-structure candidate screening.
 
 ## Recovery status
 
@@ -123,4 +133,6 @@ All filenames explicitly referenced by the current public Aptafind code were loc
 - `pca_model_info.pkl`
 - `meme_clusters` and its target-specific MEME XML outputs
 
-The immediate problem is therefore organization and reproducibility—not loss of the principal historical files.
+The principal historical files are not lost. Repository organization and the
+first reproducible train–evaluate–generate loop are complete; data provenance
+and stronger scientific validation remain open research work.

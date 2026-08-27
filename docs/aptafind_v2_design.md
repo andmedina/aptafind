@@ -1,5 +1,13 @@
 # Aptafind v2 Design Proposal
 
+> **Implementation status (August 2026):** The supported PyTorch
+> train–evaluate–generate workflow described in
+> `docs/thesis_sequence_generation_pipeline.md` now implements the sequence
+> generator, target-disjoint split, training-only molecule preprocessing,
+> baselines, checkpointing, candidate filters, and automated tests proposed
+> here. Predictive affinity modeling, repeated group-aware evaluation, and
+> secondary-structure screening remain future research work.
+
 ## Project objective
 
 Aptafind v2 will rebuild the historical thesis workflow as a reproducible research pipeline for analyzing known ssDNA aptamers and ranking computational candidate sequences for small-molecule targets.

@@ -6,11 +6,22 @@ This directory represents the transition between the thesis VAE and the later co
 
 After the thesis prototype, the feature pipeline was expanded to better represent both ssDNA aptamers and their small-molecule targets. The work explored whether richer biological and chemical representations could support target-conditioned modeling.
 
-## Representative artifact
+## Preserved artifacts
 
-- `features_v2.py` is retained as a representative intermediate revision.
+- `features.ipynb`: the later working notebook that replaced the thesis-era
+  notebook in the repository during November 2023
+- `features_v2.py`: representative intermediate feature revision
+- `generateSequence.py`: experimental sequence-generation helper
+- `utilities/cleanUpSequence.py`: sequence-cleaning helper
+- `utilities/constructSqeuence.py`: historical sequence-construction helper;
+  the original filename spelling is retained
+- `utilities/extractCore.py`: motif-core extraction experiment
+- `utilities/extractSequence.py`: sequence extraction helper
 
-Other experiments remain preserved in Git history and the original local research workspace rather than being duplicated here.
+The distinct April 2023 thesis notebook is preserved in
+`historical/thesis_vae_2023/`. Shared utilities used by the integrated CVAE
+pipeline are preserved with that prototype in
+`historical/tensorflow_cvae_2023/utilities/`.
 
 ## Areas explored
 
@@ -25,7 +36,11 @@ Other experiments remain preserved in Git history and the original local researc
 
 ## Why this phase is summarized
 
-This was an exploratory period with many dated datasets, temporary notebooks, and overlapping script revisions. Publishing every intermediate file would obscure the scientific progression. The representative script and Git history preserve the work, while the documentation explains how it led to `features_v3.py` and the TensorFlow CVAE.
+This was an exploratory period with many dated datasets, temporary notebooks,
+and overlapping script revisions. This directory retains every unique source
+artifact that remained at the repository root, while Git history preserves the
+earlier progression. The documentation explains how the work led to
+`features_v3.py` and the TensorFlow CVAE.
 
 ## Limitations
 
