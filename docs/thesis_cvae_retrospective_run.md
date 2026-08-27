@@ -10,6 +10,18 @@ The result demonstrates a reproducible software workflow. It does not
 demonstrate target-specific binding or establish that generated sequences are
 functional aptamers.
 
+Frozen baseline identity:
+
+- Baseline: `thesis-cvae-baseline-v0.1.0`
+- Implementation commit: `27e9d165873b8e7f8db207b18102392aff708e01`
+- Annotated Git tag: `thesis-cvae-baseline-v0.1.0`
+- Machine-readable record:
+  `benchmarks/thesis_cvae_baseline_v0.1.0.json`
+
+The baseline record contains local artifact hashes but does not publish the
+restricted source data, model checkpoint, split manifest, or generated
+candidates.
+
 ## Source identity
 
 The raw source files remain in the local Research archive and are not

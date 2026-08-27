@@ -144,6 +144,12 @@ records the source hashes, target-disjoint split, baseline comparisons, held-out
 metrics, candidate audit, and limitations without publishing the raw dataset or
 generated sequences.
 
+That implementation and run are frozen as
+[`thesis-cvae-baseline-v0.1.0`](benchmarks/thesis_cvae_baseline_v0.1.0.json).
+The [benchmark comparison policy](benchmarks/README.md) defines how a future
+broad-small-molecule pretrained, steroid-fine-tuned model must be compared
+without changing the test set or overstating results across different datasets.
+
 ## Longer-term research direction
 
 The near-term study asks:

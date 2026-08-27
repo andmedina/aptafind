@@ -1,0 +1,116 @@
+{
+  "artifact_hashes": {
+    "estradiol_candidates_csv": "2efcc1bfefec9fe3c6c656ec1105e121f32c94ed77e2eb1d63939a1722d7c41f",
+    "estradiol_candidates_fasta": "fb8adbd234c2db17e68fa0d713b1251f90bf4c50d279fac24f6ee003e2c8cc94",
+    "estradiol_generation_metadata": "7dd8a11a282c08e912728386ecb07289df3ec51e15e2ce6d5c43328b56946ba1",
+    "run_summary": "89f35dc17e6ac6c4293c7ff1211118bc34e435f1c93e0aca386ee43a44a419fc",
+    "sequence_cvae_checkpoint": "20b31c2f924ce42637e321a4f1be7e55cee134b6a774c0eab22b1d1a7026840f",
+    "split_manifest": "ec4c0aa3241428aeb8eb7157289d5b14d152eac1f2cbf7210135ecc718c688fb",
+    "training_history": "fa714efc396e4e18001f32892af7fa486d51b6b78b7b6a5e841190a9035598c6"
+  },
+  "baseline_id": "thesis-cvae-baseline-v0.1.0",
+  "candidate_audit": {
+    "accepted_candidates": 10,
+    "draws": 40,
+    "exact_training_matches": 0,
+    "maximum_gc_fraction": 0.5897435897435898,
+    "maximum_homopolymer": 4,
+    "maximum_length": 62,
+    "maximum_reference_identity": 0.5853658536585367,
+    "minimum_gc_fraction": 0.358974358974359,
+    "minimum_length": 39,
+    "rejected_unique_sequences": 6,
+    "target": "estradiol"
+  },
+  "code": {
+    "implementation_commit": "27e9d165873b8e7f8db207b18102392aff708e01",
+    "repository": "https://github.com/andmedina/aptafind",
+    "tag": "thesis-cvae-baseline-v0.1.0"
+  },
+  "comparison_contract": {
+    "direct_comparison_requires": [
+      "identical source SHA-256 identities",
+      "identical split manifest",
+      "training-only preprocessing",
+      "identical metric definitions",
+      "identical evaluation examples"
+    ],
+    "expanded_dataset_rule": "Rerun both the baseline architecture and the new method on the same newly frozen folds; do not compare metrics across different test datasets as direct improvements.",
+    "planned_primary_comparison": "steroid-only versus broad non-steroid small-molecule pretraining followed by steroid fine-tuning",
+    "required_controls": [
+      "simple non-neural baseline",
+      "matched generic pretraining",
+      "target-label permutation",
+      "sequence-family and target-aware evaluation"
+    ]
+  },
+  "dataset": {
+    "duplicate_rows_removed": 3,
+    "maximum_sequence_length": 109,
+    "minimum_sequence_length": 9,
+    "source_rows": 168,
+    "sources_sha256": {
+      "aptamer_data": "a2ccdc64a9b73f013558780f2f22bbec028dc4564b4893b512d3f16a42d8d511",
+      "legacy_target_features": "46f12f11f10643777aba52d40b79d1d88bd87518f0805c7a6f606696d6722b0e"
+    },
+    "unique_sequences": 154,
+    "unique_targets": 64,
+    "validated_sequence_target_pairs": 165
+  },
+  "evaluation": {
+    "split_seed": 42,
+    "split_strategy": "canonical-target-disjoint",
+    "test": {
+      "rows": 16,
+      "targets": 6
+    },
+    "training": {
+      "rows": 133,
+      "targets": 52
+    },
+    "validation": {
+      "rows": 16,
+      "targets": 6
+    }
+  },
+  "model": {
+    "condition_dimension": 136,
+    "decoder_hidden_dimension": 128,
+    "embedding_dimension": 32,
+    "encoder_hidden_dimension": 64,
+    "latent_dimension": 16,
+    "type": "target-conditioned autoregressive sequence CVAE"
+  },
+  "recorded_at_utc": "2026-08-27T17:42:47.695790+00:00",
+  "results": {
+    "bigram": {
+      "negative_log_likelihood": 1.4490856638673362,
+      "perplexity": 4.259218376991306,
+      "token_accuracy": 0.2537313432835821
+    },
+    "conditional_sequence_cvae": {
+      "beta_weighted_loss": 1.4416692353785039,
+      "kl_divergence": 0.11639375984668732,
+      "negative_log_likelihood": 1.4358495473861694,
+      "nll_improvement_over_bigram": 0.009134115954085172,
+      "perplexity": 4.2032143221637295,
+      "token_accuracy": 0.2945273518562317
+    },
+    "evaluated_tokens": 1005,
+    "unigram": {
+      "negative_log_likelihood": 1.454327143227247,
+      "perplexity": 4.281601591537507,
+      "token_accuracy": 0.25472636815920396
+    }
+  },
+  "scope": "Retrospective software and sequence-reconstruction baseline; not evidence of binding, specificity, affinity, or efficacy.",
+  "software": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "python": "3.11.16",
+    "pytorch": "2.7.1",
+    "pyyaml": "6.0.3",
+    "rdkit": "2026.03.5"
+  },
+  "status": "frozen"
+}
