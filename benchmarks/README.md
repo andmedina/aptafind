@@ -10,9 +10,12 @@ when available so an authorized local archive can be verified.
 | Baseline | Purpose | Record | Git tag |
 |---|---|---|---|
 | Thesis CVAE v0.1.0 | First complete modern PyTorch train–evaluate–generate loop on the recovered late-2023 small-molecule dataset | `thesis_cvae_baseline_v0.1.0.json` | `thesis-cvae-baseline-v0.1.0` |
+| Expanded thesis CVAE v0.2.0 | Same sequence-CVAE architecture on the first harmonized broad-small-molecule positive-pair export | `thesis_cvae_expanded_v0.2.0.json` | `thesis-cvae-expanded-v0.2.0` |
 
-The thesis CVAE baseline measures held-out sequence reconstruction and candidate
-generation mechanics. It is not a binding-prediction benchmark.
+Both thesis CVAE benchmarks measure held-out sequence reconstruction and
+candidate-generation mechanics. Neither is a binding-prediction benchmark. The
+v0.1.0 and v0.2.0 metrics use different datasets and therefore are not a direct
+model comparison.
 
 ## Comparison policy
 

@@ -146,6 +146,11 @@ generated sequences.
 
 That implementation and run are frozen as
 [`thesis-cvae-baseline-v0.1.0`](benchmarks/thesis_cvae_baseline_v0.1.0.json).
+The first harmonized broad-small-molecule run is separately frozen as
+[`thesis-cvae-expanded-v0.2.0`](benchmarks/thesis_cvae_expanded_v0.2.0.json),
+with a full [expanded-run report](docs/expanded_thesis_cvae_run.md). It uses a
+different dataset from v0.1.0, so its metrics are not a direct improvement
+comparison.
 The [benchmark comparison policy](benchmarks/README.md) defines how a future
 broad-small-molecule pretrained, steroid-fine-tuned model must be compared
 without changing the test set or overstating results across different datasets.
@@ -190,6 +195,12 @@ The [Frozen AptaBench Profile Report](docs/aptabench_frozen_profile.md) found:
 The first-wave ssDNA/small-molecule source catalog is also locally acquired and profiled. It now includes the N2A2 kynurenine screen, Xiao-lab thermodynamics/specificity workbooks, the DL-SELEX steroid endpoint supplement, the 2017 high-affinity steroid receptor supplement, UTexas, AptaDB, Aptamer Base, and previously cataloged steroid studies. Raw source files stay in the ignored Bronze lake; checksums, observed profiles, provenance, and reuse caveats are frozen in `manifests/datasets.yaml` and [the dataset registry](docs/dataset_registry.md).
 
 The first Bronze-to-Silver [thesis data harmonization pipeline](docs/thesis_data_harmonization.md) is now runnable. Its initial real-data run produced 282,371 provenance-bearing measurements and a conflict-screened generator input containing 1,835 unique positive DNA sequence–target pairs across 288 canonical small-molecule structures. The generated Silver tables remain local and ignored; their input/output hashes and audits are written with each run.
+
+The first expanded-data CVAE benchmark trained successfully on that 1,835-pair
+export. It outperformed unigram and bigram token baselines on its target-disjoint
+test split, but its near-zero KL divergence signals posterior collapse. Target
+conditioning and binding utility therefore remain unproven and are explicit
+next-study controls rather than current claims.
 
 This supports general small-molecule endpoint modeling, but not yet a rigorous steroid-only Model A/B/C comparison. Gate 1A (benchmark characterization) is complete. Gate 1B (cross-dataset independence) is paused while the thesis-era sequence-generation workflow is modernized.
 

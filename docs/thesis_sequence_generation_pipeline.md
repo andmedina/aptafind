@@ -104,6 +104,12 @@ separate stages. See [Thesis Data Harmonization](thesis_data_harmonization.md)
 for the canonical schema, source counts, overlap warnings, and reproduction
 command.
 
+The first run on this expanded export is frozen in the
+[expanded small-molecule CVAE report](expanded_thesis_cvae_run.md). It is a
+separate experiment from the recovered historical-data run and cannot be used
+as a direct performance comparison because the datasets and test examples
+differ.
+
 ## Installation
 
 ```bash
@@ -262,7 +268,10 @@ must retain the label "computational candidate" through every pre-assay stage.
 - Hyperparameters have not yet been selected through nested or repeated
   cross-validation.
 
-The next scientific step is a retrospective historical run with repeated,
-group-aware evaluation and comparisons against simple sequence baselines. The
-next engineering step is a versioned candidate-screening stage that integrates
-structure prediction without making unsupported affinity claims.
+The next scientific step is repeated, family/publication-aware evaluation with
+target-label permutation and condition-ablation controls. The next model step
+is to address the expanded run's posterior collapse before comparing
+steroid-only training with broad-small-molecule pretraining and steroid
+fine-tuning on identical steroid folds. The next engineering step is a
+versioned candidate-screening stage that integrates structure prediction
+without making unsupported affinity claims.

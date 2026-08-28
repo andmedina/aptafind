@@ -1,0 +1,136 @@
+{
+  "artifact_hashes": {
+    "estradiol_candidates_csv": "8eb861eed14751a32b51507f7da2885116f97f8b6d79e6050a1834ddecac5935",
+    "estradiol_candidates_fasta": "c2dcf5fd29b32e156cad0561bb3cbf35ff2b5a93b073efe9be8f26c5e71506f1",
+    "estradiol_generation_metadata": "07d56e88f9e13ef3d75076995272de4a73fa6fe857169d5f94ff1099b74ab485",
+    "run_summary": "77ce06a21e37dee27d97594a87c820bcbd16369b781cb8fff7feffb5ee4f85de",
+    "sequence_cvae_checkpoint": "2246c9197aa53ca62474251497b3728235a5cd1b169cf4ef682436370d167c6c",
+    "split_manifest": "dcc39673577a74f10e529fc7bccee7b753d019c2ef99e5758bdeb48f7e3a8b49",
+    "training_history": "6e3c156bc6a6a13189542ca12de0f9ff011d1d609ed3e0c98e32c1e053b16732"
+  },
+  "benchmark_id": "thesis-cvae-expanded-v0.2.0",
+  "candidate_audit": {
+    "accepted_candidates": 20,
+    "draws": 80,
+    "exact_reference_matches": 0,
+    "exact_training_matches": 0,
+    "maximum_gc_fraction": 0.5789473684210527,
+    "maximum_homopolymer": 4,
+    "maximum_length": 76,
+    "maximum_reference_identity": 0.5526315789473684,
+    "minimum_gc_fraction": 0.3947368421052631,
+    "minimum_length": 76,
+    "rejected_unique_sequences": 10,
+    "seed": 20260828,
+    "target": "estradiol",
+    "warning": "The only harmonized estradiol training example is 76 nt, so default target-observed length bounds forced every retained candidate to 76 nt. Candidate novelty and composition are not affinity scores."
+  },
+  "code": {
+    "implementation_commit": "47fa787405ea19e333c8bac3b5b1ea4cd07ecf7e",
+    "repository": "https://github.com/andmedina/aptafind",
+    "tag": "thesis-cvae-expanded-v0.2.0"
+  },
+  "comparison_contract": {
+    "direct_comparison_requires": [
+      "identical source SHA-256 identities",
+      "identical split manifest",
+      "training-only preprocessing",
+      "identical metric definitions",
+      "identical evaluation examples"
+    ],
+    "historical_baseline_rule": "The v0.1.0 and v0.2.0 metrics use different datasets and test examples. They are separate experiments and must not be described as a direct performance improvement.",
+    "required_next_controls": [
+      "repeated group-aware folds with uncertainty intervals",
+      "sequence-family and publication grouping",
+      "target-label permutation and condition-ablation controls",
+      "matched steroid-only and broad-small-molecule transfer comparisons",
+      "secondary-structure and laboratory validation of candidates"
+    ]
+  },
+  "dataset": {
+    "duplicate_rows_removed": 0,
+    "harmonization_config_sha256": "068e1f030828f0736e7a4cf180f5965a54d18a3ee0d48c8ece060547cb588acc",
+    "harmonization_report_sha256": "3bd10b6c2b75963d962cf8e3dc1aca879c1ffce7ad963318e78c51a3f81bf0ab",
+    "maximum_sequence_length": 100,
+    "minimum_sequence_length": 13,
+    "source_sha256": "02c59ae2a2f6f2b5ad5304fe039b3600624b5e12a088a1459fafa83889c22532",
+    "source_rows": 1835,
+    "unique_sequences": 1014,
+    "unique_targets": 288,
+    "validated_sequence_target_pairs": 1835
+  },
+  "evaluation": {
+    "split_seed": 42,
+    "split_strategy": "canonical-target-disjoint",
+    "test": {
+      "rows": 184,
+      "targets": 29
+    },
+    "training": {
+      "rows": 1467,
+      "targets": 230
+    },
+    "validation": {
+      "rows": 184,
+      "targets": 29
+    }
+  },
+  "model": {
+    "condition_dimension": 136,
+    "decoder_hidden_dimension": 128,
+    "embedding_dimension": 32,
+    "encoder_hidden_dimension": 64,
+    "latent_dimension": 16,
+    "type": "target-conditioned autoregressive sequence CVAE"
+  },
+  "recorded_at_utc": "2026-08-28T17:16:35.310929+00:00",
+  "results": {
+    "best_epoch": 40,
+    "best_validation_loss": 1.1330120341848737,
+    "bigram": {
+      "negative_log_likelihood": 1.4465530177293477,
+      "perplexity": 4.248444932438011,
+      "token_accuracy": 0.32776335102179066
+    },
+    "conditional_sequence_cvae": {
+      "beta_weighted_loss": 1.3776197739879266,
+      "kl_divergence": 0.005270022777435573,
+      "negative_log_likelihood": 1.3773562728490547,
+      "nll_improvement_over_bigram": 0.04783560922565498,
+      "perplexity": 3.964406950783215,
+      "token_accuracy": 0.4012645423627672
+    },
+    "evaluated_tokens": 8857,
+    "stopped_epoch": 40,
+    "unigram": {
+      "negative_log_likelihood": 1.4429671622718179,
+      "perplexity": 4.2332379043880595,
+      "token_accuracy": 0.32776335102179066
+    }
+  },
+  "scope": "Expanded small-molecule software, reconstruction, and candidate-generation benchmark; not evidence of binding, specificity, affinity, or efficacy.",
+  "software": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "python": "3.11.16",
+    "pytorch": "2.7.1",
+    "pyyaml": "6.0.3",
+    "rdkit": "2026.03.5"
+  },
+  "status": "frozen",
+  "training": {
+    "batch_size": 64,
+    "best_epoch_reached_configured_epoch_cap": true,
+    "config_sha256": "96f6a8848f44bf7dc888d73bcaa0b40d99adf975c47490b0d2bf4fc2b0d589f1",
+    "device": "cpu",
+    "epochs": 40,
+    "seed": 42
+  },
+  "warnings": [
+    "The test KL divergence is near zero, which is strong evidence of posterior collapse. The decoder may be behaving mostly as an autoregressive language model rather than using the latent variable.",
+    "The best validation loss occurred at epoch 40, the configured epoch cap, so convergence and early-stopping behavior have not been established.",
+    "Target-disjoint splitting does not control sequence-family, publication, assay, or source lineage overlap.",
+    "No target-label permutation, condition ablation, or binding-ranking evaluation has established meaningful target conditioning.",
+    "The generator was trained on positive pairs only and cannot distinguish binders from non-binders."
+  ]
+}
