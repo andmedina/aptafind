@@ -1,6 +1,24 @@
-manifest_version: "0.1.0"
-last_reviewed: "2026-08-13"
-project_scope: "Steroid-focused ssDNA aptamer discovery"
+manifest_version: "0.2.0"
+last_reviewed: "2026-08-27"
+project_scope: "Experimentally grounded ssDNA aptamers for small-molecule targets, with steroid-focused transfer and evaluation"
+
+storage_policy:
+  tracked_in_git:
+    - source_metadata
+    - provenance
+    - rights_and_access_notes
+    - file_inventories
+    - checksums
+    - acquisition_instructions
+  local_only:
+    root: data_lake
+    bronze: immutable_source_snapshots
+    silver: validated_standardized_records
+    gold: model_ready_versioned_datasets
+  remote_only_until_approved:
+    - multi_gigabyte_sequencing_files
+    - request_only_data
+    - sources_with_unresolved_reuse_terms
 
 status_vocabulary:
   - discovered
@@ -21,11 +39,20 @@ evidence_vocabulary:
   - published_candidate
   - library_composition
 
+source_role_vocabulary:
+  - endpoint_aggregate
+  - primary_endpoint_study
+  - selection_trajectory
+  - discovery_index
+  - derived_overlap_audit
+  - supporting_control
+
 datasets:
   - dataset_id: aptabench_current_review_release
     title: "AptaBench small-molecule interaction benchmark"
     status: profiled
     priority: primary
+    source_role: endpoint_aggregate
     source:
       repository: Hugging_Face
       record_url: "https://huggingface.co/datasets/aptabench-anonymous/AptaBench_dataset"
@@ -40,6 +67,22 @@ datasets:
       interaction_records: 6289
       unique_aptamers: 1610
       unique_ligands: 942
+    observed_ssdna_subset:
+      interaction_records: 4721
+      unique_sequences: 1065
+      unique_ligands: 314
+      positive_records: 1941
+      negative_records: 2780
+      observation_date: "2026-08-27"
+    known_source_labels:
+      - AptaDB
+      - AptaGen
+      - Aptamer_Base
+      - Manual
+      - RSAPred
+      - Ribocentre
+      - Specificity
+      - UTexas
     evidence_types:
       - measured_affinity
       - measured_binding
@@ -70,15 +113,18 @@ datasets:
       - "Frozen manifest: manifests/aptabench_frozen_release.yaml."
       - "Steroid screen found 79 records, 9 connectivity-level targets, and 61 families at 90% identity."
       - "Only 10 steroid negative records were found, all for one connectivity-level target."
+      - "The full DNA-only small-molecule subset is much stronger: 4,721 rows, 1,065 exact sequences, 314 ligands, 1,941 positives, and 2,780 measured negatives."
       - "Freeze repository revision and checksums because counts changed across manuscript revisions."
       - "Profile DNA-only steroid subset before deciding model feasibility."
       - "Recluster sequences because exact aptamer-disjoint splits may not be family-disjoint."
       - "Audit overlap with UTexas, AptaDB, historical Aptafind, and DL-SELEX sources."
+      - "Do not concatenate source databases blindly: this release already aggregates overlapping records from eight named lineages."
 
   - dataset_id: dl_selex_hydrocortisone_guided
     title: "DL-SELEX hydrocortisone HT-NGS"
     status: metadata_verified
     priority: primary
+    source_role: selection_trajectory
     source:
       repository: Zenodo
       record_url: "https://zenodo.org/records/14272647"
@@ -97,7 +143,7 @@ datasets:
       - late_round_abundance
     files:
       format: fastq.gz
-      expected_total_size_bytes: null
+      expected_total_size_bytes: 4926271028
       expected_total_size_human: "approximately 4.9 GB compressed"
       entries:
         - round: 3
@@ -132,8 +178,8 @@ datasets:
           md5: "8b70263b612310443a559ac6c38f7651"
     rights:
       access: open_record
-      license: null
-      license_status: verification_required
+      license: CC-BY-4.0
+      license_status: verified_from_zenodo_api_2026_08_27
       redistribution_status: not_reviewed
     local:
       download_status: not_downloaded
@@ -144,8 +190,9 @@ datasets:
 
   - dataset_id: dl_selex_testosterone_guided
     title: "DL-SELEX testosterone HT-NGS"
-    status: discovered
+    status: metadata_verified
     priority: primary
+    source_role: selection_trajectory
     source:
       repository: Zenodo
       record_url: "https://zenodo.org/records/14272757"
@@ -158,20 +205,49 @@ datasets:
     experiment:
       library_strategy: model_guided
       rounds: [3, 5, 7]
-      rounds_status: verification_required
       sequencing_layout: paired_end
-      sequencing_layout_status: verification_required
     evidence_types:
       - multi_round_enrichment
       - late_round_abundance
     files:
       format: fastq.gz
-      entries: []
-      inventory_status: verification_required
+      expected_total_size_bytes: 5218959503
+      expected_total_size_human: "approximately 5.2 GB compressed"
+      entries:
+        - round: 3
+          read: 1
+          name: "3th-TES-LFL5720_L3_1.fq.gz"
+          size_bytes: 1053027967
+          md5: "bfe417aa0aa692a1f0239770d1bb8521"
+        - round: 3
+          read: 2
+          name: "3th-TES-LFL5720_L3_2.fq.gz"
+          size_bytes: 1043854562
+          md5: "4f6c0805c15da5fc55cc35d06841bc07"
+        - round: 5
+          read: 1
+          name: "5th-Tes-LFL5724_L3_1.fq.gz"
+          size_bytes: 865689276
+          md5: "4cffcdb15ad61fb9274ff34a56f05749"
+        - round: 5
+          read: 2
+          name: "5th-Tes-LFL5724_L3_2.fq.gz"
+          size_bytes: 850367002
+          md5: "c513a4221aeafdefa715fd16bbef1db7"
+        - round: 7
+          read: 1
+          name: "7th-Tes-LFL5728_L3_1.fq.gz"
+          size_bytes: 722880220
+          md5: "dc24f8070a6a94f888325c561918f463"
+        - round: 7
+          read: 2
+          name: "7th-Tes-LFL5728_L3_2.fq.gz"
+          size_bytes: 683140476
+          md5: "bd6ab9dd5c819cc8b4a90b870e533892"
     rights:
       access: open_record
-      license: null
-      license_status: verification_required
+      license: CC-BY-4.0
+      license_status: verified_from_zenodo_api_2026_08_27
       redistribution_status: not_reviewed
     local:
       download_status: not_downloaded
@@ -182,8 +258,9 @@ datasets:
 
   - dataset_id: dl_selex_hydrocortisone_manual
     title: "Manually designed hydrocortisone HT-SELEX"
-    status: discovered
+    status: metadata_verified
     priority: primary
+    source_role: selection_trajectory
     source:
       repository: Zenodo
       record_url: "https://zenodo.org/records/14272347"
@@ -195,21 +272,45 @@ datasets:
         target_class: steroid
     experiment:
       library_strategy: manually_designed
-      rounds: []
-      rounds_status: verification_required
-      sequencing_layout: null
-      sequencing_layout_status: verification_required
+      rounds: [7, 8]
+      sequencing_layout: paired_end
     evidence_types:
       - multi_round_enrichment
       - late_round_abundance
     files:
       format: fastq.gz
-      entries: []
-      inventory_status: verification_required
+      expected_total_size_bytes: 3465003564
+      expected_total_size_human: "approximately 3.5 GB compressed"
+      entries:
+        - round: null
+          read: null
+          name: "QC_summary.xls"
+          size_bytes: 155
+          md5: "e1f90a1fd461c041d4e8e14ac54d5a13"
+        - round: 7
+          read: 1
+          name: "R7-LFE6014_L1_1.fastq.gz"
+          size_bytes: 897776381
+          md5: "133849c9d4494723d0e61648c45dd28e"
+        - round: 7
+          read: 2
+          name: "R7-LFE6014_L1_2.fastq.gz"
+          size_bytes: 819346258
+          md5: "fa69208d913065f1a2d0552de25630cc"
+        - round: 8
+          read: 1
+          name: "R8-LFE6015_L1_1.fastq.gz"
+          size_bytes: 924336258
+          md5: "2314460f1b45d6f9693ceb489e82445f"
+        - round: 8
+          read: 2
+          name: "R8-LFE6015_L1_2.fastq.gz"
+          size_bytes: 823544512
+          md5: "6f86b3ddfdd1e2e3d397991976dd1156"
     rights:
       access: open_record
-      license: null
-      license_status: verification_required
+      license: CC-BY-4.0
+      license_status: verified_from_zenodo_api_2026_08_27
       redistribution_status: not_reviewed
     local:
       download_status: not_downloaded
@@ -219,8 +320,9 @@ datasets:
 
   - dataset_id: utexas_aptamer_database_v1_1_0
     title: "UTexas Aptamer Dataset"
-    status: metadata_verified
+    status: downloaded
     priority: primary
+    source_role: endpoint_aggregate
     source:
       repository: Zenodo
       record_url: "https://zenodo.org/records/8387047"
@@ -234,6 +336,11 @@ datasets:
     reported_counts:
       aptamer_sequences: 1415
       publications: 489
+    observed_snapshot:
+      workbook_rows: 1495
+      workbook_columns: 28
+      worksheets: 1
+      observation_date: "2026-08-27"
     evidence_types:
       - measured_affinity
       - published_candidate
@@ -249,20 +356,23 @@ datasets:
           md5: "39e4838d14d7837be021f24daa87021d"
     rights:
       access: open_record
-      license: null
-      license_status: verification_required
+      license: CC-BY-3.0-US
+      license_status: verified_from_zenodo_api_2026_08_27
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified
+      retrieved_on: "2026-08-27"
       bronze_uri: "bronze/utexas_aptamer_database_v1_1_0"
     audit_notes:
       - "Not every listed sequence was individually validated."
       - "Parent sequences and paper-level groups must be preserved for leakage analysis."
+      - "The September 2023 workbook has 1,495 rows; reconcile row count versus the publication's 1,415 reported sequences during profiling."
 
   - dataset_id: aptadb_2023_12_03
     title: "AptaDB"
-    status: metadata_verified
+    status: downloaded
     priority: primary
+    source_role: endpoint_aggregate
     source:
       repository: AptaDB
       record_url: "https://lmmd.ecust.edu.cn/aptadb/about.php"
@@ -283,24 +393,206 @@ datasets:
       - published_candidate
     files:
       format: csv_or_tsv
-      entries: []
-      inventory_status: download_links_and_checksums_required
+      entries:
+        - name: interaction.csv
+          url: "https://lmmd.ecust.edu.cn/aptadb/download/interaction.csv"
+          size_bytes: 218199
+          encoding: latin_1
+          sha256: "6dbd97f20fa6f98d359d697713c43032d5a6a3c1a400d80ef28a150d676dff86"
+        - name: aptamer.csv
+          url: "https://lmmd.ecust.edu.cn/aptadb/download/aptamer.csv"
+          size_bytes: 352454
+          encoding: latin_1
+          sha256: "9d3ab029d1de4408d2406051a68bc0e6da347ee1be1838aee9c938ca3f3fb464"
+        - name: molecule.csv
+          url: "https://lmmd.ecust.edu.cn/aptadb/download/molecule.csv"
+          size_bytes: 26684
+          encoding: utf_8
+          sha256: "d7df7ed1197dcb41345eb961af187154c9928381f438497bb7b42167b77640a1"
+      inventory_status: core_tables_downloaded_and_checksum_verified
+    observed_snapshot:
+      interaction_rows: 1350
+      aptamer_rows: 1293
+      molecule_rows: 131
+      observation_date: "2026-08-27"
     rights:
       access: public_download_page
       license: null
       license_status: verification_required
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_keep_local
+      retrieved_on: "2026-08-27"
       bronze_uri: "bronze/aptadb_2023_12_03"
     audit_notes:
       - "Steroid subset and measured-negative coverage must be profiled."
       - "Assay and buffer differences may prevent direct affinity pooling."
+      - "The website permits public downloads but does not state a clear dataset reuse license; keep source files local."
+
+  - dataset_id: n2a2_kynurenine_specificity_2022
+    title: "Multiplexed ssDNA aptamer specificity screen for kynurenine metabolites"
+    status: metadata_verified
+    priority: primary
+    source_role: primary_endpoint_study
+    source:
+      repository: publication_supplement
+      record_url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC8944265/"
+      publication_doi: "10.1073/pnas.2119945119"
+      publication_date: "2022-03-22"
+    targets:
+      - canonical_name: kynurenine
+        target_class: small_molecule_metabolite
+      - canonical_name: kynurenic_acid
+        target_class: small_molecule_metabolite
+      - canonical_name: 3_hydroxykynurenine
+        target_class: small_molecule_metabolite
+      - canonical_name: xanthurenic_acid
+        target_class: small_molecule_metabolite
+      - canonical_name: 3_hydroxyanthranilic_acid
+        target_class: small_molecule_metabolite
+    experiment:
+      platform: N2A2_modified_Illumina_MiSeq
+      selection_rounds: 7
+      variable_region_nt: 30
+      target_concentration_micromolar: 100
+      screening_design: five_target_multiplexed_cross_reactivity
+    reported_counts:
+      screened_clusters: 2800000
+      unique_sequence_fraction: 0.87
+      monospecific_3_hydroxykynurenine_candidates: 902
+      monospecific_xanthurenic_acid_candidates: 6
+      monospecific_kynurenic_acid_candidates: 1
+    evidence_types:
+      - measured_binding
+      - measured_nonbinding
+      - measured_cross_reactivity
+      - published_candidate
+    files:
+      format: xlsx_and_pdf
+      entries:
+        - name: "pnas.2119945119.sd01.xlsx"
+          size_human: "164.3 MB"
+          url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/8944265/bin/pnas.2119945119.sd01.xlsx"
+          contents: manuscript_figure_underlying_data
+        - name: "pnas.2119945119.sapp.pdf"
+          size_human: "2.3 MB"
+          url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/8944265/bin/pnas.2119945119.sapp.pdf"
+          contents: methods_sequences_and_supporting_tables
+    rights:
+      access: public_article_and_supplements
+      license: CC-BY-NC-ND-4.0
+      license_status: verified_from_pmc_article_2026_08_27
+      redistribution_status: not_reviewed
+    local:
+      download_status: not_downloaded
+      bronze_uri: "bronze/n2a2_kynurenine_specificity_2022"
+    audit_notes:
+      - "This is high-priority measured cross-target supervision, not a random negative construction."
+      - "The article says Dataset S1 contains data underlying manuscript figures; confirm whether all cluster-level measurements are present after download."
+      - "The no-derivatives term requires a rights review before publishing transformed records."
+
+  - dataset_id: xiao_thermodynamics_specificity_2025
+    title: "DNA aptamer-small-molecule thermodynamics and specificity profiles"
+    status: metadata_verified
+    priority: primary
+    source_role: primary_endpoint_study
+    source:
+      repository: publication_supplement
+      record_url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11952966/"
+      publication_doi: "10.1093/nar/gkaf219"
+      publication_date: "2025-03-28"
+    targets:
+      - canonical_name: multiple
+        target_class: small_molecule_drug_or_drug_like
+    reported_counts:
+      dna_aptamers_with_itc_data: 317
+      measured_itc_pairs: 319
+      dna_aptamers_with_specificity_profiles: 218
+      approximate_specificity_pairs: 6000
+      ligands_per_specificity_panel_min: 18
+      ligands_per_specificity_panel_max: 35
+    evidence_types:
+      - measured_affinity
+      - measured_binding
+      - measured_nonbinding
+      - measured_cross_reactivity
+    files:
+      format: zip
+      entries:
+        - name: "gkaf219_supplemental_files.zip"
+          size_human: "3.7 MB"
+          url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/11952966/bin/gkaf219_supplemental_files.zip"
+          contents: "Supplementary Tables S1-S23 and figures; sequence, ITC, and specificity data"
+    rights:
+      access: public_article_and_supplement
+      license: CC-BY-NC-4.0
+      license_status: verified_from_pmc_article_2026_08_27
+      redistribution_status: not_reviewed
+    local:
+      download_status: not_downloaded
+      bronze_uri: "bronze/xiao_thermodynamics_specificity_2025"
+    audit_notes:
+      - "All aptamers in this study are DNA."
+      - "AptaBench's Specificity lineage derives from this DOI, so ingestion must preserve source IDs and prevent duplicate counting."
+      - "A failed direct download on 2026-08-27 returned an NCBI preparation interstitial, not the ZIP; metadata and contents remain verified from the article."
+
+  - dataset_id: aptamer_base_archive
+    title: "Aptamer Base recovered Freebase archive"
+    status: downloaded
+    priority: secondary
+    source_role: endpoint_aggregate
+    source:
+      repository: GitHub
+      record_url: "https://github.com/micheldumontier/aptamerbase"
+      publication_doi: "10.1093/database/bas006"
+      version: "git:e7a3eb43d24504fd5a7b6c3e470ab242bc471b3a"
+      version_status: frozen_for_acquisition
+    targets:
+      - canonical_name: multiple
+        target_class: mixed
+    evidence_types:
+      - measured_affinity
+      - measured_binding
+      - published_candidate
+    observed_snapshot:
+      aptamers_csv_rows: 2128
+      experiments_csv_rows: 16059
+      interactions_csv_rows: 4551
+      observation_date: "2026-08-27"
+    files:
+      format: csv_and_rdf
+      entries:
+        - name: "data/aptamerbase_aptamers.csv"
+          size_bytes: 505662
+          sha256: "40b329551b225a29ee2c656cf6b59b98ff686a981968b856685cdc7c222a784c"
+        - name: "data/aptamerbase_experiments.csv"
+          size_bytes: 5263585
+          sha256: "2f6bd5dbfa9736e4066000e24af72a8d7823e6b82886ac25186459942f334853"
+        - name: "data/aptamerbase_interactions.csv"
+          size_bytes: 1193427
+          sha256: "846c8c1c3086d06ef6f0dd59d547a80c0960d16732978a679dafebeca6feaf0e"
+        - name: "data/aptamerbase.freebase.extract.nt.gz"
+          size_bytes: 5779966
+          sha256: "3ab9340ee1fcb6a0910532a6e8d4cf5cc62579c3b21d85355c48d473e372006c"
+    rights:
+      access: public_git_repository
+      license: MIT
+      license_status: verified_from_github_api_2026_08_27
+      redistribution_status: source_provenance_review_required
+    local:
+      download_status: downloaded_checksum_verified
+      retrieved_on: "2026-08-27"
+      bronze_uri: "bronze/aptamer_base_archive"
+    audit_notes:
+      - "Recovered after Freebase shut down; treat as a historical archive rather than a maintained database."
+      - "AptaBench already includes an Aptamer Base lineage, so use this source for provenance recovery and overlap auditing."
+      - "Target identities are represented through participant/interactions relationships and require provenance-preserving joins before small-molecule filtering."
 
   - dataset_id: aptafind_historical_curated
     title: "Historical Aptafind curated data"
     status: downloaded
     priority: primary
+    source_role: endpoint_aggregate
     source:
       repository: local_research_archive
       record_url: null
@@ -330,14 +622,108 @@ datasets:
       - "Overlap with public databases and primary literature must be resolved."
       - "Rows are not assumed to be independent families or experiments."
 
-  - dataset_id: one_pot_selex_steroids_2019
-    title: "One-Pot SELEX steroid study"
-    status: discovered
-    priority: secondary
+  - dataset_id: dl_selex_steroid_endpoints_2025
+    title: "DL-SELEX steroid training table and experimentally tested candidates"
+    status: metadata_verified
+    priority: primary
+    source_role: primary_endpoint_study
+    source:
+      repository: publication_supplement_and_ENA
+      record_url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC12713628/"
+      publication_doi: "10.1093/bib/bbaf680"
+      ena_accession: PRJEB89545
+      ena_url: "https://www.ebi.ac.uk/ena/browser/view/PRJEB89545"
+    targets:
+      - canonical_name: multiple
+        target_class: steroid
+      - canonical_name: hydrocortisone
+        target_class: steroid
+      - canonical_name: testosterone
+        target_class: steroid
+    reported_counts:
+      literature_derived_steroid_aptamer_pairs: 195
+      steroid_targets_in_training_table: 8
+      ena_candidate_sequences: 6
+    evidence_types:
+      - measured_affinity
+      - measured_binding
+      - measured_cross_reactivity
+      - published_candidate
+    files:
+      format: docx_and_ena_project_metadata
+      entries:
+        - name: "dl-selex-si-final_bbaf680.docx"
+          size_human: "18.4 MB"
+          url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/12713628/bin/dl-selex-si-final_bbaf680.docx"
+          contents: "Table S1 literature training pairs, Table S3 libraries, Table S6 ITC results, and supporting methods"
+        - name: PRJEB89545
+          size_human: metadata_only
+          url: "https://www.ebi.ac.uk/ena/browser/api/xml/PRJEB89545"
+          contents: "Six named CS/TES candidate sequences in project attributes; no read runs returned on 2026-08-27"
+    rights:
+      access: public_article_supplement_and_ENA_metadata
+      license: CC-BY-4.0
+      license_status: verified_for_article_from_pmc_2026_08_27
+      redistribution_status: ena_sequence_metadata_terms_require_review
+    local:
+      download_status: not_downloaded
+      bronze_uri: "bronze/dl_selex_steroid_endpoints_2025"
+    audit_notes:
+      - "This 195-pair table is highly likely to overlap the historical Aptafind thesis data and public aggregate databases."
+      - "Preserve both raw and authors' truncated sequences; do not silently treat truncations as independent aptamers."
+      - "The Zenodo trajectory records are separate experimental units but share candidates and study lineage with this endpoint source."
+
+  - dataset_id: high_affinity_steroid_receptors_2017
+    title: "High-affinity DNA receptors for steroid targets and counter-targets"
+    status: metadata_verified
+    priority: primary
+    source_role: primary_endpoint_study
     source:
       repository: publication_supplement
-      record_url: "https://doi.org/10.1021/acsomega.9b02412"
+      record_url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6737899/"
+      publication_doi: "10.1021/acschembio.7b00634"
+      publication_date: "2017-11-22"
+    targets:
+      - canonical_name: multiple
+        target_class: steroid
+    reported_counts:
+      steroid_targets_and_analogs_described: 12
+      selection_targets: 5
+    evidence_types:
+      - measured_affinity
+      - measured_binding
+      - measured_cross_reactivity
+      - counter_selection
+      - published_candidate
+    files:
+      format: pdf_supplement
+      entries:
+        - name: "NIHMS1049347-supplement-supplementary.pdf"
+          size_human: "2.0 MB"
+          url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/6737899/bin/NIHMS1049347-supplement-supplementary.pdf"
+          contents: "Selection protocol, aptamer sequences, structure predictions, affinity, and cross-reactivity results"
+    rights:
+      access: public_manuscript_and_supplement
+      license: null
+      license_status: reuse_terms_require_verification
+      redistribution_status: not_reviewed
+    local:
+      download_status: not_downloaded
+      bronze_uri: "bronze/high_affinity_steroid_receptors_2017"
+    audit_notes:
+      - "Likely a major primary source for both historical Aptafind and the DL-SELEX 195-pair training table."
+      - "Record target, counter-target, assay, full sequence, minimal binding domain, and parent-child relationships separately."
+
+  - dataset_id: one_pot_selex_steroids_2019
+    title: "One-Pot SELEX steroid study"
+    status: profiled
+    priority: secondary
+    source_role: primary_endpoint_study
+    source:
+      repository: ACS_Figshare
+      record_url: "https://acs.figshare.com/articles/journal_contribution/One-Pot_SELEX_Identification_of_Specific_Aptamers_against_Diverse_Steroid_Targets_in_One_Selection/10498772"
       publication_doi: "10.1021/acsomega.9b02412"
+      supplement_doi: "10.1021/acsomega.9b02412.s001"
     targets:
       - canonical_name: estradiol
         target_class: steroid
@@ -352,25 +738,48 @@ datasets:
       - published_candidate
     files:
       format: pdf_supplement
-      entries: []
+      entries:
+        - name: "ao9b02412_si_001.pdf"
+          size_bytes: 1611808
+          url: "https://ndownloader.figshare.com/files/19000556"
+          md5: "8435f5da2ad55836c6479c1fbd2d0dd9"
+          contents: "NGS pool counts; 55 target-preferential sequences; cross-pool abundance; family alignments; six selected aptamers"
       raw_read_repository: not_found_in_initial_search
+    observed_snapshot:
+      sequenced_pools: 5
+      target_preferential_candidates: 55
+      estradiol_candidates: 30
+      progesterone_candidates: 18
+      testosterone_candidates: 7
+      final_selected_aptamers: 6
+      last_round_total_reads: 322105
+      last_round_unique_80_100_bp_sequences: 36379
+      observation_date: "2026-08-27"
     rights:
       access: public_article_and_supplement
-      license: null
-      license_status: verification_required
+      license: CC-BY-NC-4.0
+      license_status: verified_from_acs_figshare_api_2026_08_27
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_and_profiled
+      retrieved_on: "2026-08-27"
       bronze_uri: "bronze/one_pot_selex_steroids_2019"
+    audit_notes:
+      - "Supplement Tables S4-S6 contain 55 full candidate sequences; Table S7 contains cross-pool rank and copy counts; Table S8 contains six selected aptamers."
+      - "No raw-read repository was found, so the full pool cannot be reconstructed from the PDF alone."
+      - "Primer regions are present in the reported full sequences and must be represented explicitly during standardization."
 
   - dataset_id: estradiol_capture_selex_2022
     title: "Estradiol Capture-SELEX study"
-    status: discovered
+    status: profiled
     priority: secondary
+    source_role: primary_endpoint_study
     source:
-      repository: publication_and_institutional_repository
-      record_url: "https://uwspace.uwaterloo.ca/items/06aafdbf-ff47-464b-b04c-05ae7310448f"
+      repository: ACS_Figshare_and_institutional_repository
+      record_url: "https://acs.figshare.com/articles/journal_contribution/Capture-SELEX_of_DNA_Aptamers_for_Estradiol_Specifically_and_Estrogenic_Compounds_Collectively/21636826"
+      institutional_record_url: "https://uwspace.uwaterloo.ca/items/06aafdbf-ff47-464b-b04c-05ae7310448f"
       publication_doi: "10.1021/acs.est.2c05808"
+      supplement_doi: "10.1021/acs.est.2c05808.s001"
     targets:
       - canonical_name: 17_beta_estradiol
         target_class: steroid
@@ -380,22 +789,43 @@ datasets:
       - measured_cross_reactivity
       - published_candidate
     files:
-      format: publication_and_supplement
-      entries: []
+      format: pdf_supplement
+      entries:
+        - name: "es2c05808_si_001.pdf"
+          size_bytes: 1483900
+          url: "https://ndownloader.figshare.com/files/39776398"
+          md5: "44964ce923b548e9b0575b199c721395"
+          contents: "Selection library and primers; five full-length P5/P7 candidates; three unmodified CN-Es constructs; five-candidate enrichment table; ITC and control results"
       raw_read_repository: not_found_in_initial_search
+    observed_snapshot:
+      selection_rounds: 12
+      round_12_reads_reported: 50728
+      round_12_leading_candidate_fraction: 0.261
+      enriched_candidates_profiled_across_rounds: 5
+      full_length_p5_p7_candidates_listed: 5
+      unmodified_cn_es_constructs_listed: 3
+      measured_nonbinding_example: "CN-Es2 versus 17-alpha-ethinylestradiol (EE2)"
+      observation_date: "2026-08-27"
     rights:
-      access: public_manuscript
-      license: "CC BY-NC-SA 2.5 CA for institutional-repository item unless otherwise noted"
-      license_status: primary_data_terms_require_verification
+      access: public_article_and_supplement
+      license: CC-BY-NC-4.0
+      license_status: verified_from_acs_figshare_api_2026_08_27
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_and_profiled
+      retrieved_on: "2026-08-27"
       bronze_uri: "bronze/estradiol_capture_selex_2022"
+    audit_notes:
+      - "Supplement Table S1 distinguishes the N30 library, primer sequences, five full-length P5/P7 candidates, three unmodified CN-Es constructs, and assay-specific modified oligonucleotides."
+      - "Table S3 reports ranks and counts for CN-Es1 through CN-Es5 in rounds 8, 9, 11, and 12; the raw sequencing reads were not deposited with the supplement."
+      - "Figure S5 contains positive ITC measurements and an explicit non-binding result, useful for evidence-aware negative labels."
+      - "Modified assay constructs must not be collapsed into independent aptamers during standardization."
 
   - dataset_id: progesterone_aptamer_array_2025
     title: "Progesterone high-throughput aptamer array study"
     status: discovered
     priority: investigate
+    source_role: primary_endpoint_study
     source:
       repository: bioRxiv
       record_url: "https://doi.org/10.1101/2025.09.13.675901"
@@ -412,17 +842,148 @@ datasets:
       sequence_level_data_status: availability_not_verified
     rights:
       access: public_preprint
-      license: null
-      license_status: data_reuse_terms_require_verification
+      license: all_rights_reserved_no_reuse_without_permission
+      license_status: verified_from_biorxiv_2026_08_27
       redistribution_status: not_reviewed
     local:
       download_status: not_downloaded
       bronze_uri: null
+    audit_notes:
+      - "The Soh Lab lists a 2026 Nature Chemistry successor publication; locate its final data statement before requesting files."
+      - "Do not scrape or ingest preprint supplements into a redistributable dataset without permission."
+
+  - dataset_id: apta_index_live
+    title: "Apta-Index literature-derived aptamer directory"
+    status: metadata_verified
+    priority: discovery_only
+    source_role: discovery_index
+    source:
+      repository: Aptagen
+      record_url: "https://www.aptagen.com/apta-index/"
+      publication_doi: null
+      version: live_website
+    targets:
+      - canonical_name: multiple
+        target_class: mixed
+    reported_counts:
+      approximate_sequences: 800
+    evidence_types:
+      - published_candidate
+    files:
+      format: website_entries
+      entries: []
+      bulk_download_status: not_found
+    rights:
+      access: public_web_directory
+      license: null
+      license_status: terms_and_bulk_reuse_not_verified
+      redistribution_status: not_approved
+    local:
+      download_status: do_not_scrape
+      bronze_uri: null
+    audit_notes:
+      - "Use for publication discovery and cross-reference only unless Aptagen provides bulk-use permission."
+      - "Aptagen states that literature-derived entries are not independently validated by the company."
+
+  - dataset_id: aptabase_iitg_live
+    title: "Aptabase IIT Guwahati aptamer directory"
+    status: metadata_verified
+    priority: discovery_only
+    source_role: discovery_index
+    source:
+      repository: IIT_Guwahati
+      record_url: "https://www.iitg.ac.in/proj/aptabase/"
+      publication_doi: null
+      version: live_website
+    targets:
+      - canonical_name: multiple
+        target_class: mixed
+    reported_counts:
+      sequences_reported_2023: 605
+    evidence_types:
+      - published_candidate
+    files:
+      format: website_entries
+      entries: []
+      bulk_download_status: not_found
+    rights:
+      access: public_web_directory
+      license: null
+      license_status: terms_and_bulk_reuse_not_verified
+      redistribution_status: not_approved
+    local:
+      download_status: do_not_scrape
+      bronze_uri: null
+    audit_notes:
+      - "Use as a discovery and cross-reference index, not as an independently licensed training dataset."
+
+  - dataset_id: aptacom_derived
+    title: "AptaCom nonredundant database derived from six aptamer databases"
+    status: metadata_verified
+    priority: overlap_audit
+    source_role: derived_overlap_audit
+    source:
+      repository: GitHub
+      record_url: "https://github.com/rpgv/AptaCom"
+      publication_doi: null
+      version: main_branch_snapshot_required_at_download
+    targets:
+      - canonical_name: multiple
+        target_class: mixed
+    evidence_types:
+      - published_candidate
+    files:
+      format: repository_database
+      entries: []
+    rights:
+      access: public_git_repository
+      license: null
+      license_status: no_license_detected_by_github_api_2026_08_27
+      redistribution_status: not_approved
+    local:
+      download_status: not_downloaded
+      bronze_uri: null
+    audit_notes:
+      - "Useful for database-lineage and duplicate audits, but not independent experimental evidence."
+      - "No repository license was detected; do not redistribute or train from it until terms are clarified."
+
+  - dataset_id: mendeley_aptagen_dna_2020
+    title: "Secondary DNA aptamer sequence collection derived from Aptagen"
+    status: metadata_verified
+    priority: supporting
+    source_role: derived_overlap_audit
+    source:
+      repository: Mendeley_Data
+      record_url: "https://data.mendeley.com/datasets/76jgjbgndr/1"
+      doi: "10.17632/76jgjbgndr.1"
+      version: 1
+    targets:
+      - canonical_name: multiple
+        target_class: mixed
+    reported_counts:
+      unique_aptamer_sequences: 238
+    evidence_types:
+      - published_candidate
+    files:
+      format: tabular
+      entries: []
+    rights:
+      access: public_dataset_page
+      license: CC-BY-4.0
+      license_status: verified_from_mendeley_record_2026_08_27
+      redistribution_status: original_source_provenance_review_required
+    local:
+      download_status: not_downloaded
+      bronze_uri: "bronze/mendeley_aptagen_dna_2020"
+    audit_notes:
+      - "Secondary scraped collection; target and assay context may be insufficient for supervised endpoint modeling."
+      - "Use for sequence-universe comparison only after resolving overlap with Apta-Index and aggregate databases."
 
   - dataset_id: rational_dna_libraries_2026
     title: "Rationally designed DNA screening libraries"
     status: metadata_verified
     priority: supporting
+    source_role: supporting_control
     source:
       repository: Zenodo
       record_url: "https://zenodo.org/records/18719585"
@@ -446,8 +1007,8 @@ datasets:
           md5: "fa5703002e05e2fbbf7215238c665ef4"
     rights:
       access: open_record
-      license: null
-      license_status: verification_required
+      license: CC-BY-4.0
+      license_status: verified_from_zenodo_api_2026_08_27
       redistribution_status: not_reviewed
     local:
       download_status: not_downloaded
@@ -459,4 +1020,24 @@ exclusions:
   - exclusion_id: steroid_receptor_selex
     reason: "Measures DNA recognition by steroid receptor proteins, not aptamer binding to steroid molecules."
   - exclusion_id: aptani_islet_ht_selex
-    reason: "Complex cellular targets are outside the initial steroid-small-molecule scope."
+    reason: "Complex cellular targets are outside the ssDNA-small-molecule scope."
+  - exclusion_id: rna_only_aptamer_sources
+    examples:
+      - RiboaptDB
+      - Ribocentre_RNA_records
+      - R_BIND
+      - UltraSynBERT_RNA_SELEX_tasks
+    reason: "RNA aptamers are a different molecular alphabet and folding regime; do not convert RNA sequences to DNA."
+  - exclusion_id: natural_rna_small_molecule_interactions
+    examples:
+      - NALDB
+      - SMRTnet
+    reason: "These sources study small molecules binding natural RNAs rather than selected ssDNA aptamers."
+  - exclusion_id: protein_peptide_cell_and_tissue_targets
+    reason: "Useful for generic nucleic-acid modeling but outside the target-conditioned small-molecule endpoint task."
+  - exclusion_id: ions_as_primary_targets
+    reason: "Metal and inorganic-ion coordination differs from organic small-molecule recognition; track separately if the scope expands."
+  - exclusion_id: chemically_modified_x_aptamers
+    reason: "Modified bases cannot be represented faithfully by the current A/C/G/T tokenizer; retain only as a clearly flagged external evaluation source."
+  - exclusion_id: random_cross_pair_negatives_as_measured_evidence
+    reason: "Unobserved aptamer-target pairs are unlabeled, not experimentally measured nonbinders."

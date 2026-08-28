@@ -4,8 +4,12 @@ channels:
 dependencies:
   - python=3.11
   - numpy
+  - openpyxl
   - pandas
+  - pdfplumber
+  - poppler
   - pytorch
+  - pypdf
   - pyyaml
   - rapidfuzz
   - rdkit

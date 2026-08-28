@@ -150,6 +150,18 @@ The [benchmark comparison policy](benchmarks/README.md) defines how a future
 broad-small-molecule pretrained, steroid-fine-tuned model must be compared
 without changing the test set or overstating results across different datasets.
 
+The [ssDNA–small-molecule source catalog](docs/dataset_registry.md) now tracks
+primary experiments, aggregate databases, selection trajectories, discovery
+indexes, licenses, exact file inventories, and overlap risks. Source metadata
+and checksums are versioned in Git through `manifests/datasets.yaml`; third-party
+downloads remain local in the ignored Bronze data lake. The highest-value new
+sources provide experimentally measured cross-target outcomes rather than
+invented negatives, including a 2.8-million-cluster kynurenine-metabolite screen
+and approximately 6,000 DNA aptamer–ligand specificity measurements. The frozen
+AptaBench release itself contains 4,721 DNA-only rows across 1,065 exact
+sequences and 314 ligands, including 2,780 measured negative records, which
+supports broad small-molecule pretraining before steroid-focused fine-tuning.
+
 ## Longer-term research direction
 
 The near-term study asks:

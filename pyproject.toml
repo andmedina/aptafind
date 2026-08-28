@@ -9,7 +9,10 @@ description = "Reproducible aptamer data profiling and modeling research pipelin
 requires-python = ">=3.11"
 dependencies = [
   "numpy",
+  "openpyxl",
   "pandas",
+  "pdfplumber",
+  "pypdf",
   "pyyaml",
   "rapidfuzz",
   "rdkit",
