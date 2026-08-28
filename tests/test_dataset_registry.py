@@ -126,3 +126,58 @@ def test_profiled_steroid_supplements_have_frozen_source_metadata() -> None:
         assert dataset["rights"]["license"] == "CC-BY-NC-4.0"
         assert entry["name"] == source["filename"]
         assert entry["md5"] == source["md5"]
+
+
+def test_browser_gated_sources_are_profiled_and_checksumed() -> None:
+    registry = _load_registry()
+    by_id = {dataset["dataset_id"]: dataset for dataset in registry["datasets"]}
+
+    expected = {
+        "n2a2_kynurenine_specificity_2022": {
+            "filename": "pnas.2119945119.sd01.xlsx",
+            "size_bytes": 172_326_770,
+            "sha256": (
+                "3e4277fb4f3352c9528205c015288789d6338692c126430ef1a1298ac3629892"
+            ),
+        },
+        "xiao_thermodynamics_specificity_2025": {
+            "filename": "gkaf219_supplemental_files.zip",
+            "size_bytes": 3_852_946,
+            "sha256": (
+                "6e2bfec2ebc5d7da91313b9964e6f9438f92f98d56399a97c5400e2f66640903"
+            ),
+        },
+        "dl_selex_steroid_endpoints_2025": {
+            "filename": "dl-selex-si-final_bbaf680.docx",
+            "size_bytes": 19_285_454,
+            "sha256": (
+                "820e4ee18333cfa83b2d3bbccf101f1547d236622f52c8ae2c08463533830674"
+            ),
+        },
+        "high_affinity_steroid_receptors_2017": {
+            "filename": "NIHMS1049347-supplement-supplementary.pdf",
+            "size_bytes": 2_138_292,
+            "sha256": (
+                "545153e676f39c57ada5a54c23ca4e67626d76fc57b237aaada5d909ace822ed"
+            ),
+        },
+    }
+
+    for dataset_id, source in expected.items():
+        dataset = by_id[dataset_id]
+        entry = dataset["files"]["entries"][0]
+
+        assert dataset["status"] == "profiled"
+        assert dataset["local"]["download_status"].startswith(
+            "downloaded_checksum_verified"
+        )
+        assert entry["name"] == source["filename"]
+        assert entry["size_bytes"] == source["size_bytes"]
+        assert entry["sha256"] == source["sha256"]
+
+    n2a2 = by_id["n2a2_kynurenine_specificity_2022"]
+    assert n2a2["observed_snapshot"]["screen_stage_unique_sequences"] == 54_023
+    assert n2a2["observed_snapshot"]["screen_stage_cluster_rows"] == 266_388
+
+    xiao = by_id["xiao_thermodynamics_specificity_2025"]
+    assert xiao["observed_snapshot"]["specificity_total_measurements"] == 6_033

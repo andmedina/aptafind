@@ -431,7 +431,7 @@ datasets:
 
   - dataset_id: n2a2_kynurenine_specificity_2022
     title: "Multiplexed ssDNA aptamer specificity screen for kynurenine metabolites"
-    status: metadata_verified
+    status: profiled
     priority: primary
     source_role: primary_endpoint_study
     source:
@@ -471,29 +471,53 @@ datasets:
       format: xlsx_and_pdf
       entries:
         - name: "pnas.2119945119.sd01.xlsx"
+          size_bytes: 172326770
           size_human: "164.3 MB"
           url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/8944265/bin/pnas.2119945119.sd01.xlsx"
+          md5: "1b7b3a08bceeaacc3c78200b047523d9"
+          sha256: "3e4277fb4f3352c9528205c015288789d6338692c126430ef1a1298ac3629892"
           contents: manuscript_figure_underlying_data
         - name: "pnas.2119945119.sapp.pdf"
+          size_bytes: 2376141
           size_human: "2.3 MB"
           url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/8944265/bin/pnas.2119945119.sapp.pdf"
+          md5: "6c0fc16cd3fdb60732d9b547f914354b"
+          sha256: "8c1a3205cd1f5a2c4b17c061ffe803c75e5bc3f19a976a0c7d8050946d169a59"
           contents: methods_sequences_and_supporting_tables
+    observed_snapshot:
+      workbook_sheets: 29
+      screen_stage_unique_sequences: 54023
+      screen_stage_cluster_rows: 266388
+      enriched_stage_unique_sequences: 59714
+      hc1_cluster_rows: 108334
+      candidate_cluster_rows:
+        3hk_1: 847
+        ka_1: 2
+        xa_1: 8
+      observed_sequence_lengths_nt:
+        - 29
+        - 30
+        - 31
+      observation_date: "2026-08-28"
     rights:
       access: public_article_and_supplements
       license: CC-BY-NC-ND-4.0
       license_status: verified_from_pmc_article_2026_08_27
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_and_profiled
+      retrieved_on: "2026-08-28"
       bronze_uri: "bronze/n2a2_kynurenine_specificity_2022"
     audit_notes:
       - "This is high-priority measured cross-target supervision, not a random negative construction."
-      - "The article says Dataset S1 contains data underlying manuscript figures; confirm whether all cluster-level measurements are present after download."
+      - "Dataset S1 contains figure-underlying subsets rather than all 2.8 million screened clusters: 266,388 cluster rows map to 54,023 unique sequences in the main screen sheets."
+      - "The same cluster rows occur in intensity, percent-change, and z-score representations and must not be counted as independent observations."
+      - "Observed 29- and 31-nt sequence strings should be preserved as raw sequencing outcomes rather than silently forced to the designed 30-nt variable-region length."
       - "The no-derivatives term requires a rights review before publishing transformed records."
 
   - dataset_id: xiao_thermodynamics_specificity_2025
     title: "DNA aptamer-small-molecule thermodynamics and specificity profiles"
-    status: metadata_verified
+    status: profiled
     priority: primary
     source_role: primary_endpoint_study
     source:
@@ -520,21 +544,45 @@ datasets:
       format: zip
       entries:
         - name: "gkaf219_supplemental_files.zip"
+          size_bytes: 3852946
           size_human: "3.7 MB"
           url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/11952966/bin/gkaf219_supplemental_files.zip"
+          md5: "9516101a0f818cbbc9fee9f48e0d5601"
+          sha256: "6e2bfec2ebc5d7da91313b9964e6f9438f92f98d56399a97c5400e2f66640903"
           contents: "Supplementary Tables S1-S23 and figures; sequence, ITC, and specificity data"
+      archive_members:
+        - name: "Aptamer_ITC Figures_Final.pdf"
+          size_bytes: 1908870
+        - name: "Aptamer_ITC Master_Final.xlsx"
+          size_bytes: 53131
+        - name: "Aptamer_Specificity_Score Master_Final.xlsx"
+          size_bytes: 85492
+        - name: "XIAO_ITC_SI_Final_0318.pdf"
+          size_bytes: 2273050
+    observed_snapshot:
+      itc_workbook_measurement_records: 319
+      itc_target_group_sheets: 11
+      itc_distinct_aptamer_id_strings: 316
+      specificity_workbook_aptamer_columns: 218
+      specificity_target_family_sheets: 11
+      specificity_target_measurements: 218
+      specificity_non_target_measurements: 5815
+      specificity_total_measurements: 6033
+      observation_date: "2026-08-28"
     rights:
       access: public_article_and_supplement
       license: CC-BY-NC-4.0
       license_status: verified_from_pmc_article_2026_08_27
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_and_profiled
+      retrieved_on: "2026-08-28"
       bronze_uri: "bronze/xiao_thermodynamics_specificity_2025"
     audit_notes:
       - "All aptamers in this study are DNA."
       - "AptaBench's Specificity lineage derives from this DOI, so ingestion must preserve source IDs and prevent duplicate counting."
-      - "A failed direct download on 2026-08-27 returned an NCBI preparation interstitial, not the ZIP; metadata and contents remain verified from the article."
+      - "The specificity workbook contains 6,033 panel measurements: 218 target cells and 5,815 non-target cells; its readme says negative cross-reactivity values were replaced with zero."
+      - "The article reports 317 aptamers with ITC data, while the workbook has 319 rows and 316 distinct aptamer ID strings; F21, F27, and F28 recur and require sequence-level reconciliation."
 
   - dataset_id: aptamer_base_archive
     title: "Aptamer Base recovered Freebase archive"
@@ -624,7 +672,7 @@ datasets:
 
   - dataset_id: dl_selex_steroid_endpoints_2025
     title: "DL-SELEX steroid training table and experimentally tested candidates"
-    status: metadata_verified
+    status: profiled
     priority: primary
     source_role: primary_endpoint_study
     source:
@@ -653,29 +701,52 @@ datasets:
       format: docx_and_ena_project_metadata
       entries:
         - name: "dl-selex-si-final_bbaf680.docx"
+          size_bytes: 19285454
           size_human: "18.4 MB"
           url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/12713628/bin/dl-selex-si-final_bbaf680.docx"
+          md5: "80fd8959e0d6d85f854e106a2929b698"
+          sha256: "820e4ee18333cfa83b2d3bbccf101f1547d236622f52c8ae2c08463533830674"
           contents: "Table S1 literature training pairs, Table S3 libraries, Table S6 ITC results, and supporting methods"
         - name: PRJEB89545
           size_human: metadata_only
           url: "https://www.ebi.ac.uk/ena/browser/api/xml/PRJEB89545"
           contents: "Six named CS/TES candidate sequences in project attributes; no read runs returned on 2026-08-27"
+    observed_snapshot:
+      literature_training_rows_reported: 195
+      literature_training_rows_parsed_from_docx_text: 189
+      parsed_target_counts:
+        hydrocortisone_cs: 64
+        deoxycorticosterone_glucoside_dog: 11
+        dehydroisoandrosterone_sulfate_dis: 20
+        testosterone_tes: 10
+        aldosterone_ald: 2
+        beta_estradiol_be: 44
+        progesterone_pro: 18
+        deoxycholic_acid_dca: 20
+      parsed_sequence_length_min_nt: 15
+      parsed_sequence_length_max_nt: 116
+      structural_profile_status: text_and_tables_extracted_visual_render_unavailable
+      observation_date: "2026-08-28"
     rights:
       access: public_article_supplement_and_ENA_metadata
       license: CC-BY-4.0
       license_status: verified_for_article_from_pmc_2026_08_27
       redistribution_status: ena_sequence_metadata_terms_require_review
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_and_structurally_profiled
+      retrieved_on: "2026-08-28"
       bronze_uri: "bronze/dl_selex_steroid_endpoints_2025"
     audit_notes:
       - "This 195-pair table is highly likely to overlap the historical Aptafind thesis data and public aggregate databases."
       - "Preserve both raw and authors' truncated sequences; do not silently treat truncations as independent aptamers."
       - "The Zenodo trajectory records are separate experimental units but share candidates and study lineage with this endpoint source."
+      - "Training scores combine reported values, frequency-derived values, and assigned 0.99 values for known binders; they are not a uniform affinity endpoint."
+      - "Table S6 includes explicit no-binding cross-target results, but its extracted caption/header disagree on whether dissociation constants are reported in micromolar or molar units; verify units before ingestion."
+      - "The DOCX passed archive-integrity and structural text/table checks, but visual rendering was unavailable because LibreOffice is not installed."
 
   - dataset_id: high_affinity_steroid_receptors_2017
     title: "High-affinity DNA receptors for steroid targets and counter-targets"
-    status: metadata_verified
+    status: profiled
     priority: primary
     source_role: primary_endpoint_study
     source:
@@ -699,20 +770,33 @@ datasets:
       format: pdf_supplement
       entries:
         - name: "NIHMS1049347-supplement-supplementary.pdf"
+          size_bytes: 2138292
           size_human: "2.0 MB"
           url: "https://pmc.ncbi.nlm.nih.gov/articles/instance/6737899/bin/NIHMS1049347-supplement-supplementary.pdf"
+          md5: "65ab1c2f227246e537fa7648f20088f3"
+          sha256: "545153e676f39c57ada5a54c23ca4e67626d76fc57b237aaada5d909ace822ed"
           contents: "Selection protocol, aptamer sequences, structure predictions, affinity, and cross-reactivity results"
+    observed_snapshot:
+      selection_target_classes: 5
+      aptameric_sensor_sequences: 12
+      steroid_cross_reactivity_panel_members: 10
+      estimated_kd_min_nm: 30
+      estimated_kd_max_nm: 1700
+      observation_date: "2026-08-28"
     rights:
       access: public_manuscript_and_supplement
       license: null
       license_status: reuse_terms_require_verification
       redistribution_status: not_reviewed
     local:
-      download_status: not_downloaded
+      download_status: downloaded_checksum_verified_and_profiled
+      retrieved_on: "2026-08-28"
       bronze_uri: "bronze/high_affinity_steroid_receptors_2017"
     audit_notes:
       - "Likely a major primary source for both historical Aptafind and the DL-SELEX 195-pair training table."
       - "Record target, counter-target, assay, full sequence, minimal binding domain, and parent-child relationships separately."
+      - "Table S2 mixes full sensor constructs, capture strands, short aptamers, anti-aptamers, and circular-dichroism constructs; only the 12 named sensor candidates are independent published candidate labels."
+      - "The sequence table uses CSS labels while the affinity figure text uses CCS labels for the hydrocortisone/cortisol family; preserve this source discrepancy in raw provenance."
 
   - dataset_id: one_pot_selex_steroids_2019
     title: "One-Pot SELEX steroid study"

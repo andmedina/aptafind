@@ -78,7 +78,7 @@ The 2022 PNAS study [A system for multiplexed selection of aptamers with exquisi
 
 It reports an ssDNA library with a 30-nt variable region, seven pooled-target selection rounds, and a modified MiSeq screen of 2.8 million clusters against five related metabolites: kynurenine, kynurenic acid, 3-hydroxykynurenine, xanthurenic acid, and 3-hydroxyanthranilic acid. About 87% of screened clusters represented unique sequences. The authors report 902 monospecific 3-hydroxykynurenine candidates, six for xanthurenic acid, and one for kynurenic acid.
 
-The 164.3 MB `pnas.2119945119.sd01.xlsx` supplement contains data underlying the manuscript figures; a 2.3 MB PDF contains supporting methods and tables. After download, the spreadsheet must be inspected to determine whether it includes all cluster-level response measurements or only summarized figure inputs.
+Both supplements are now downloaded, checksum-verified, and profiled locally. The 164.3 MB workbook has 29 sheets. Its main screen contains 266,388 cluster rows representing 54,023 unique sequences with two or more clusters; a later enriched screen contains 59,714 unique sequence summaries. It also includes 108,334 rows for the high-copy HC-1 control and focused validation sheets. These are figure-underlying subsets, not a dump of all 2.8 million screened clusters. The 14-page PDF supplies the library, candidate, scramble, control, and displacement-strand sequences plus Figures S1-S11.
 
 Why it matters:
 
@@ -96,15 +96,17 @@ The 2025 Nucleic Acids Research study [Exploring the relationship between aptame
 - ITC-derived affinity and thermodynamic measurements for 317 small-molecule-binding DNA aptamers, comprising 319 measured aptamer–ligand pairs.
 - Specificity profiles for 218 DNA aptamers tested against panels of 18–35 ligands, yielding approximately 6,000 aptamer–ligand observations.
 
-The data are in a 3.7 MB supplementary archive. This is the primary source behind AptaBench's `Specificity` lineage, so it should strengthen provenance and supply richer quantitative fields, not be concatenated as independent rows on top of AptaBench.
+The downloaded, checksum-verified 3.7 MB archive contains two source workbooks and two PDFs. The ITC workbook has 319 measurement records across 11 target-group sheets. The specificity workbook has 218 aptamer columns and exactly 6,033 target/panel cells: 218 target measurements and 5,815 non-target measurements across 11 family sheets. This is the primary source behind AptaBench's `Specificity` lineage, so it should strengthen provenance and supply richer quantitative fields, not be concatenated as independent rows on top of AptaBench.
 
-The article and supplement are CC BY-NC 4.0. On 2026-08-27, the direct NCBI file request returned a download-preparation interstitial rather than the ZIP; the exact link, file size, table ranges, data statement, and license were nevertheless verified from the article.
+The article and supplement are CC BY-NC 4.0. Two ingestion caveats are already visible: the specificity readme says negative cross-reactivity values were replaced with zero, and the paper's 317-aptamer claim does not map one-to-one to the workbook's 319 rows and 316 distinct ID strings. Sequence-level reconciliation must precede deduplication.
 
 ### DL-SELEX steroid endpoints and ENA candidates
 
 The 2025 [DL-SELEX study](https://doi.org/10.1093/bib/bbaf680) is both a model precedent and a data source. Its supplement reports a literature-derived training set of 195 aptamer–target pairs across eight steroid-family molecules. This is close enough to the historical Aptafind problem that overlap should be assumed until disproven.
 
-The 18.4 MB supplementary DOCX includes the literature table, guided library templates, ITC results, and experimental details. ENA project [PRJEB89545](https://www.ebi.ac.uk/ena/browser/view/PRJEB89545) contains six named hydrocortisone/testosterone candidate sequences in project metadata. The project currently returns no read runs; the multi-round reads are instead in the three Zenodo records already cataloged below.
+The 18.4 MB supplementary DOCX is downloaded, checksum-verified, and structurally profiled. It includes the literature table, guided library templates, ITC results, and experimental details. Table S1 reports 195 rows across eight steroid targets, but its score column mixes reported values, frequency-derived values, and assigned `0.99` values for known binders; it is not a uniform affinity label. Text extraction recovered 189 rows with sequences from 15 to 116 nt, while six layouts still need table-aware parsing. Table S6 includes explicit `No binding` cross-target outcomes, although its caption and extracted header disagree about units. Visual DOCX rendering remains pending because LibreOffice is unavailable in the environment.
+
+ENA project [PRJEB89545](https://www.ebi.ac.uk/ena/browser/view/PRJEB89545) contains six named hydrocortisone/testosterone candidate sequences in project metadata. The project currently returns no read runs; the multi-round reads are instead in the three Zenodo records already cataloged below.
 
 Important safeguards:
 
@@ -117,7 +119,7 @@ Important safeguards:
 
 The 2017 study [High-Affinity Nucleic-Acid-Based Receptors for Steroids](https://doi.org/10.1021/acschembio.7b00634) reports five stringent selections and a panel of 12 steroid targets/analogs, including deoxycorticosterone 21-glucoside, dehydroisoandrosterone sulfate, progesterone, testosterone, hydrocortisone, corticosterone, and aldosterone.
 
-Its supplement contains selection protocols, aptamer sequences, predicted structures, affinities, and cross-reactivity results. It is likely a major upstream source for both the historical thesis data and the DL-SELEX 195-pair table, making it valuable for reconstructing original evidence and parent–truncation relationships rather than simply adding rows.
+Its downloaded and checksum-verified 15-page supplement contains selection protocols for five target classes, 12 named sensor candidates, predicted structures, approximate affinities from 30 nM to 1.7 µM, and cross-reactivity across ten steroids. Table S2 also includes capture strands, minimal aptamers, anti-aptamers, and circular-dichroism constructs; these must remain related constructs rather than independent candidates. The source itself uses `CSS` candidate labels in the sequence table and `CCS` in the affinity text, so that discrepancy must be preserved in provenance. This study is likely a major upstream source for both the historical thesis data and the DL-SELEX 195-pair table.
 
 ## Priority sources
 
@@ -454,6 +456,8 @@ Before a source is promoted to analysis, the registry must add or confirm:
 - Whether derived Parquet tables may be redistributed
 
 ## Acquisition order
+
+The complete first-wave public supplements and database snapshots listed below were acquired and profiled by 2026-08-28. Raw files remain in the ignored local Bronze lake; only source metadata, checksums, profiles, and rights caveats are committed to Git. The order is retained as the reproducible acquisition plan.
 
 The first wave is small, high-value, and useful for schema/provenance work:
 
