@@ -1,0 +1,43 @@
+manifest_version: "0.1.0"
+description: >-
+  Structured first-wave sources for the modern thesis sequence-generation
+  pipeline. Paths are resolved beneath the immutable local Bronze root.
+
+sources:
+  - dataset_id: aptabench_current_review_release
+    adapter: aptabench
+    enabled: true
+    paths:
+      input: aptabench_current_review_release/repository/dataset/AptaBench_dataset.csv
+
+  - dataset_id: utexas_aptamer_database_v1_1_0
+    adapter: utexas
+    enabled: true
+    paths:
+      input: utexas_aptamer_database_v1_1_0/source/UTexas Aptamer Database dataset.xlsx
+
+  - dataset_id: aptadb_2023_12_03
+    adapter: aptadb
+    enabled: true
+    paths:
+      interaction: aptadb_2023_12_03/source/interaction.csv
+      aptamer: aptadb_2023_12_03/source/aptamer.csv
+      molecule: aptadb_2023_12_03/source/molecule.csv
+
+  - dataset_id: n2a2_kynurenine_specificity_2022
+    adapter: n2a2
+    enabled: true
+    paths:
+      input: n2a2_kynurenine_specificity_2022/source/pnas.2119945119.sd01.xlsx
+
+  - dataset_id: xiao_thermodynamics_specificity_2025
+    adapter: xiao_specificity
+    enabled: true
+    paths:
+      input: xiao_thermodynamics_specificity_2025/extracted/Aptamer_Specificity_Score Master_Final.xlsx
+
+  - dataset_id: xiao_thermodynamics_specificity_2025
+    adapter: xiao_itc
+    enabled: true
+    paths:
+      input: xiao_thermodynamics_specificity_2025/extracted/Aptamer_ITC Master_Final.xlsx

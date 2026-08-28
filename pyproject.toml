@@ -24,6 +24,7 @@ test = ["pytest", "torch"]
 
 [project.scripts]
 aptafind-generate = "aptafind.generation.cli:main"
+aptafind-harmonize = "aptafind.data.harmonize:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

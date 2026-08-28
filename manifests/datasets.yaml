@@ -561,7 +561,7 @@ datasets:
           size_bytes: 2273050
     observed_snapshot:
       itc_workbook_measurement_records: 319
-      itc_target_group_sheets: 11
+      itc_target_groups: 11
       itc_distinct_aptamer_id_strings: 316
       specificity_workbook_aptamer_columns: 218
       specificity_target_family_sheets: 11

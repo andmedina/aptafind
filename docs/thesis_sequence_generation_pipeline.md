@@ -94,6 +94,16 @@ The locally recovered files currently audit as:
 These counts describe the recovered local files, not a redistributable dataset.
 The source files remain outside Git pending provenance and licensing review.
 
+An expanded, reproducible data path is now available through
+`aptafind-harmonize`. The first conflict-screened Silver export contains 1,835
+exact-deduplicated positive DNA sequence–target pairs, 1,014 unique sequences,
+and 288 canonical target structures, with sequence lengths from 13 to 100 nt.
+This general small-molecule table is intended for controlled pretraining and
+benchmarking; steroid-specific fine-tuning and leakage-safe evaluation remain
+separate stages. See [Thesis Data Harmonization](thesis_data_harmonization.md)
+for the canonical schema, source counts, overlap warnings, and reproduction
+command.
+
 ## Installation
 
 ```bash

@@ -189,6 +189,8 @@ The [Frozen AptaBench Profile Report](docs/aptabench_frozen_profile.md) found:
 
 The first-wave ssDNA/small-molecule source catalog is also locally acquired and profiled. It now includes the N2A2 kynurenine screen, Xiao-lab thermodynamics/specificity workbooks, the DL-SELEX steroid endpoint supplement, the 2017 high-affinity steroid receptor supplement, UTexas, AptaDB, Aptamer Base, and previously cataloged steroid studies. Raw source files stay in the ignored Bronze lake; checksums, observed profiles, provenance, and reuse caveats are frozen in `manifests/datasets.yaml` and [the dataset registry](docs/dataset_registry.md).
 
+The first Bronze-to-Silver [thesis data harmonization pipeline](docs/thesis_data_harmonization.md) is now runnable. Its initial real-data run produced 282,371 provenance-bearing measurements and a conflict-screened generator input containing 1,835 unique positive DNA sequence–target pairs across 288 canonical small-molecule structures. The generated Silver tables remain local and ignored; their input/output hashes and audits are written with each run.
+
 This supports general small-molecule endpoint modeling, but not yet a rigorous steroid-only Model A/B/C comparison. Gate 1A (benchmark characterization) is complete. Gate 1B (cross-dataset independence) is paused while the thesis-era sequence-generation workflow is modernized.
 
 The modern sequence generator is runnable as research software, but publication-level claims about predictive signal remain blocked. Large FASTQ acquisition and the Model A/B/C comparison are deferred until Gate 1B establishes publication, sequence, family, assay, source, affinity, and ligand-identity independence between pretraining and evaluation data.
