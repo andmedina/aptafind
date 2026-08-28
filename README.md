@@ -208,6 +208,11 @@ matched permutation-trained control by 0.120 NLL in the point estimate, but the
 target-cluster 95% interval crosses zero. Repeated folds, training seeds, and
 family/publication-aware grouping remain necessary; binding utility is unproven.
 
+The [repeated grouped evaluation](docs/repeated_grouped_cvae_evaluation.md) now
+implements that next control as five strict target/family/publication folds,
+three training seeds, and paired real-label/permuted-label models. The runner is
+resumable and keeps all large run artifacts local and hash-audited.
+
 This supports general small-molecule endpoint modeling, but not yet a rigorous steroid-only Model A/B/C comparison. Gate 1A (benchmark characterization) is complete. Gate 1B (cross-dataset independence) is paused while the thesis-era sequence-generation workflow is modernized.
 
 The modern sequence generator is runnable as research software, but publication-level claims about predictive signal remain blocked. Large FASTQ acquisition and the Model A/B/C comparison are deferred until Gate 1B establishes publication, sequence, family, assay, source, affinity, and ligand-identity independence between pretraining and evaluation data.

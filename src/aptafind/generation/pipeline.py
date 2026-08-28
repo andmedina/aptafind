@@ -28,6 +28,7 @@ from aptafind.generation.checkpoint import (
 from aptafind.generation.chemistry import MoleculeFeaturizer
 from aptafind.generation.data import (
     AptamerSequenceDataset,
+    DatasetPartitions,
     LoadedAptamerTable,
     make_data_loader,
     load_aptamer_table,
@@ -477,6 +478,9 @@ def train_sequence_generator(
     legacy_target_features_path: str | Path | None = None,
     legacy_smiles_column: str = "Smiles",
     overwrite: bool = False,
+    preloaded_table: LoadedAptamerTable | None = None,
+    preassigned_partitions: DatasetPartitions | None = None,
+    partition_metadata: dict[str, Any] | None = None,
 ) -> TrainPipelineResult:
     """Validate data, train the model, evaluate it, and save auditable outputs."""
 
@@ -499,7 +503,7 @@ def train_sequence_generator(
         )
     output_path.mkdir(parents=True, exist_ok=True)
 
-    loaded: LoadedAptamerTable = load_aptamer_table(
+    loaded: LoadedAptamerTable = preloaded_table or load_aptamer_table(
         data_path,
         sequence_column=sequence_column,
         smiles_column=smiles_column,
@@ -514,13 +518,23 @@ def train_sequence_generator(
             f"maximum_sequence_length={config.data.maximum_sequence_length}."
         )
 
-    partitions = split_aptamer_table(
+    partitions = preassigned_partitions or split_aptamer_table(
         loaded.frame,
         validation_fraction=config.data.validation_fraction,
         test_fraction=config.data.test_fraction,
         seed=config.training.seed,
         strategy=config.data.split_strategy,
     )
+    if any(
+        partition.empty
+        for partition in (partitions.train, partitions.validation, partitions.test)
+    ):
+        raise ValueError("Training, validation, and test partitions must be non-empty.")
+    if sum(
+        len(partition)
+        for partition in (partitions.train, partitions.validation, partitions.test)
+    ) != len(loaded.frame):
+        raise ValueError("Preassigned partitions must cover every validated row once.")
     tokenizer = DNATokenizer(config.data.maximum_sequence_length)
     molecule_featurizer = MoleculeFeaturizer(
         fingerprint_bits=config.data.fingerprint_bits,
@@ -628,6 +642,11 @@ def train_sequence_generator(
         "model_config": model_config.state_dict(),
         "training_config": config.training.state_dict(),
         "training_condition_control": condition_control,
+        "partition_metadata": partition_metadata
+        or {
+            "origin": "generated",
+            "strategy": partitions.strategy,
+        },
         "data_config": asdict(config.data),
         "generation_config": asdict(config.generation),
         "training_target_length_ranges": _training_target_length_ranges(

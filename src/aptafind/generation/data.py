@@ -15,7 +15,7 @@ from aptafind.generation.chemistry import MoleculeFeaturizer, canonicalize_smile
 from aptafind.generation.tokenizer import DNATokenizer, normalize_dna
 
 
-SplitStrategy = Literal["target", "random"]
+SplitStrategy = Literal["target", "random", "preassigned_group"]
 
 
 @dataclass
@@ -141,6 +141,11 @@ def load_aptamer_table(
 
     records: list[dict[str, str]] = []
     errors: list[str] = []
+    provenance_columns = tuple(
+        column
+        for column in ("source_datasets", "publication_ids")
+        if column in frame.columns
+    )
     for row_position in range(source_rows):
         try:
             sequence = normalize_dna(frame.iloc[row_position][sequence_column])
@@ -152,13 +157,15 @@ def load_aptamer_table(
         except (TypeError, ValueError) as error:
             errors.append(f"row {row_position + 2}: {error}")
             continue
-        records.append(
-            {
-                "sequence": sequence,
-                "target_name": target_name,
-                "target_smiles": target_smiles,
-            }
-        )
+        record = {
+            "sequence": sequence,
+            "target_name": target_name,
+            "target_smiles": target_smiles,
+        }
+        for column in provenance_columns:
+            raw_value = frame.iloc[row_position][column]
+            record[column] = "" if pd.isna(raw_value) else str(raw_value).strip()
+        records.append(record)
 
     if errors:
         preview = "; ".join(errors[:8])

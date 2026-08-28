@@ -27,6 +27,7 @@ from aptafind.generation.pipeline import (
     load_run_config,
     train_sequence_generator,
 )
+from aptafind.generation.repeated import run_repeated_evaluation
 from aptafind.generation.tokenizer import normalize_dna
 from aptafind.generation.training import resolve_device
 
@@ -166,6 +167,30 @@ def _command_compare_checkpoints(args: argparse.Namespace) -> int:
                 "output": str(output_path),
                 "comparison": report["comparison"],
                 "scope": report["scientific_scope"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def _command_repeated_evaluate(args: argparse.Namespace) -> int:
+    result = run_repeated_evaluation(
+        data_path=args.data,
+        config_path=args.config,
+        output_directory=args.output_directory,
+        fold_indices=args.fold_index,
+        overwrite=args.overwrite,
+    )
+    print(
+        json.dumps(
+            {
+                "summary": str(result.summary_path),
+                "grouping_report": str(result.grouping_report_path),
+                "grouping_manifest": str(result.grouping_manifest_path),
+                "aggregate": result.summary["aggregate"],
+                "scope": result.summary["scientific_scope"],
             },
             indent=2,
             sort_keys=True,
@@ -413,6 +438,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--device", choices=("auto", "cpu", "cuda", "mps"), default="cpu"
     )
     comparison_parser.set_defaults(handler=_command_compare_checkpoints)
+
+    repeated_parser = subparsers.add_parser(
+        "repeated-evaluate",
+        help="Run paired real/permuted models over strict grouped folds.",
+    )
+    repeated_parser.add_argument("--data", required=True)
+    repeated_parser.add_argument("--config", required=True)
+    repeated_parser.add_argument("--output-directory", required=True)
+    repeated_parser.add_argument(
+        "--fold-index",
+        action="append",
+        type=int,
+        help="Run only this zero-based fold; repeat to select multiple folds.",
+    )
+    repeated_parser.add_argument("--overwrite", action="store_true")
+    repeated_parser.set_defaults(handler=_command_repeated_evaluate)
 
     generation_parser = subparsers.add_parser(
         "generate", help="Generate filtered candidates for one target SMILES."

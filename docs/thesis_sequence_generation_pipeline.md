@@ -113,6 +113,9 @@ differ.
 The next iteration adds [latent-use and target-condition controls](cvae_conditioning_controls.md),
 including active-unit measurements, decoder-only target derangements, an exact
 target-label permutation control, free bits, and teacher-forced token dropout.
+The subsequent [repeated grouped evaluation](repeated_grouped_cvae_evaluation.md)
+uses five strict target/family/publication folds and three training seeds to
+measure whether that conditioning result generalizes beyond one split.
 
 ## Installation
 

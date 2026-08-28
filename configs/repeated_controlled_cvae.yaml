@@ -1,0 +1,52 @@
+model:
+  embedding_dim: 32
+  encoder_hidden_dim: 64
+  decoder_hidden_dim: 128
+  condition_hidden_dim: 32
+  latent_dim: 16
+  dropout: 0.10
+
+training:
+  epochs: 60
+  batch_size: 64
+  learning_rate: 0.001
+  beta_max: 0.05
+  beta_warmup_epochs: 20
+  free_bits_per_dimension: 0.05
+  decoder_token_dropout: 0.30
+  permute_training_targets: false
+  condition_diagnostic_permutations: 5
+  patience: 10
+  gradient_clip_norm: 5.0
+  seed: 42
+  device: cpu
+
+data:
+  maximum_sequence_length: 128
+  validation_fraction: 0.20
+  test_fraction: 0.20
+  split_strategy: target
+  fingerprint_bits: 128
+  fingerprint_radius: 2
+
+generation:
+  samples_per_target: 10
+  temperature: 0.90
+  top_k: 5
+  minimum_length: 12
+  maximum_length: null
+  minimum_gc_fraction: 0.25
+  maximum_gc_fraction: 0.75
+  maximum_homopolymer: 4
+  maximum_reference_identity: 0.95
+
+validation:
+  fold_count: 5
+  training_seeds: [42, 43, 44]
+  fold_assignment_seed: 20260828
+  validation_fold_offset: 1
+  sequence_family_identity_threshold: 0.90
+  excluded_publications:
+    - doi:10.1093/nar/gkaf219
+  bootstrap_replicates: 5000
+  bootstrap_seed: 20260828
