@@ -10,6 +10,7 @@ from aptafind.generation.pipeline import (
     DataConfig,
     GenerationConfig,
     RunConfig,
+    compare_checkpoint_reconstruction,
     diagnose_checkpoint_conditions,
     train_sequence_generator,
 )
@@ -66,6 +67,12 @@ def test_tiny_pipeline_trains_checkpoints_and_generates(tmp_path: Path) -> None:
         data_path=dataset_path,
         permutations=2,
     )
+    self_comparison = compare_checkpoint_reconstruction(
+        primary_checkpoint_path=result.checkpoint_path,
+        control_checkpoint_path=result.checkpoint_path,
+        data_path=dataset_path,
+        bootstrap_replicates=20,
+    )
     generated = generate_candidate_table(
         loaded,
         target_name=SYNTHETIC_TARGETS[0][0],
@@ -92,6 +99,10 @@ def test_tiny_pipeline_trains_checkpoints_and_generates(tmp_path: Path) -> None:
     assert result.summary["test_metrics"]["effective_kl_divergence"] >= 0.08
     assert not result.summary["test_condition_diagnostics"]["summary"]["available"]
     assert diagnostic["checkpoint_sha256"]
+    assert self_comparison["comparison"]["control_minus_primary_nll"] == 0.0
+    assert self_comparison["comparison"]["target_cluster_bootstrap"][
+        "control_minus_primary_nll_interval"
+    ] == [0.0, 0.0]
     assert len(loaded.metadata["training_target_length_ranges"]) == 2
     assert len(generated.candidates) == 2
     assert generated.candidates["candidate_rank"].tolist() == [1, 2]

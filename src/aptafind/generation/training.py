@@ -11,6 +11,7 @@ from typing import Any
 import numpy as np
 import torch
 from torch import nn
+from torch.nn import functional as F
 from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
 
@@ -243,6 +244,45 @@ def evaluate_model(
         gradient_clip_norm=1.0,
         free_bits_per_dimension=free_bits_per_dimension,
     )
+
+
+def evaluate_reconstruction_examples(
+    model: ConditionalSequenceVAE,
+    dataset: AptamerSequenceDataset,
+    *,
+    batch_size: int,
+    device: torch.device,
+) -> dict[str, list[float] | list[int]]:
+    """Return deterministic posterior reconstruction totals for each example."""
+
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+    model.eval()
+    nll_sums: list[float] = []
+    token_counts: list[int] = []
+    with torch.no_grad():
+        for batch in loader:
+            token_ids = batch["token_ids"].to(device)
+            lengths = batch["length"].to(device)
+            conditions = batch["condition"].to(device)
+            output = model(
+                token_ids,
+                lengths,
+                conditions,
+                sample_latent=False,
+            )
+            targets = token_ids[:, 1:]
+            token_mask = targets.ne(model.config.pad_token_id)
+            token_losses = F.cross_entropy(
+                output.logits.transpose(1, 2),
+                targets,
+                ignore_index=model.config.pad_token_id,
+                reduction="none",
+            )
+            nll_sums.extend(
+                (token_losses * token_mask).sum(dim=1).detach().cpu().tolist()
+            )
+            token_counts.extend(token_mask.sum(dim=1).detach().cpu().tolist())
+    return {"nll_sums": nll_sums, "token_counts": token_counts}
 
 
 class _ConditionControlDataset(Dataset[dict[str, torch.Tensor]]):

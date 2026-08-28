@@ -21,6 +21,7 @@ from aptafind.generation.chemistry import canonicalize_smiles
 from aptafind.generation.data import load_aptamer_table, split_aptamer_table
 from aptafind.generation.demo import write_synthetic_aptamer_table
 from aptafind.generation.pipeline import (
+    compare_checkpoint_reconstruction,
     diagnose_checkpoint_conditions,
     file_sha256,
     load_run_config,
@@ -129,6 +130,41 @@ def _command_diagnose_condition(args: argparse.Namespace) -> int:
                 "output": str(output_path),
                 "checkpoint_sha256": report["checkpoint_sha256"],
                 "summary": report["condition_diagnostics"]["summary"],
+                "scope": report["scientific_scope"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def _command_compare_checkpoints(args: argparse.Namespace) -> int:
+    output_path = Path(args.output)
+    if output_path.exists() and not args.overwrite:
+        raise FileExistsError(f"Refusing to overwrite existing output: {output_path}")
+    report = compare_checkpoint_reconstruction(
+        primary_checkpoint_path=args.primary_checkpoint,
+        control_checkpoint_path=args.control_checkpoint,
+        data_path=args.data,
+        sequence_column=args.sequence_column,
+        smiles_column=args.smiles_column,
+        target_name_column=args.target_name_column,
+        legacy_target_features_path=args.legacy_target_features,
+        legacy_smiles_column=args.legacy_smiles_column,
+        bootstrap_replicates=args.bootstrap_replicates,
+        bootstrap_seed=args.bootstrap_seed,
+        device_name=args.device,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(
+        json.dumps(
+            {
+                "output": str(output_path),
+                "comparison": report["comparison"],
                 "scope": report["scientific_scope"],
             },
             indent=2,
@@ -361,6 +397,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--device", choices=("auto", "cpu", "cuda", "mps"), default="cpu"
     )
     diagnostic_parser.set_defaults(handler=_command_diagnose_condition)
+
+    comparison_parser = subparsers.add_parser(
+        "compare-checkpoints",
+        help="Compare two checkpoints on the same test fold with target bootstrap.",
+    )
+    _add_dataset_arguments(comparison_parser)
+    comparison_parser.add_argument("--primary-checkpoint", required=True)
+    comparison_parser.add_argument("--control-checkpoint", required=True)
+    comparison_parser.add_argument("--output", required=True)
+    comparison_parser.add_argument("--bootstrap-replicates", type=int, default=5000)
+    comparison_parser.add_argument("--bootstrap-seed", type=int, default=20260828)
+    comparison_parser.add_argument("--overwrite", action="store_true")
+    comparison_parser.add_argument(
+        "--device", choices=("auto", "cpu", "cuda", "mps"), default="cpu"
+    )
+    comparison_parser.set_defaults(handler=_command_compare_checkpoints)
 
     generation_parser = subparsers.add_parser(
         "generate", help="Generate filtered candidates for one target SMILES."

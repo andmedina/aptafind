@@ -90,3 +90,17 @@ The real-label model should be compared with the permuted-label control on the
 same test fold. A positive wrong-condition NLL penalty is evidence that the
 decoder uses the supplied condition for reconstruction; it is still not proof
 that prior-generated candidates bind that molecule.
+
+The checkpoint comparison command additionally reports a paired difference and
+a 95% percentile interval from a target-cluster bootstrap. Resampling whole
+targets preserves within-target dependence better than treating every token or
+sequence as an independent observation.
+
+```bash
+aptafind-generate compare-checkpoints \
+  --primary-checkpoint artifacts/expanded_small_molecule_cvae_antcollapse/sequence_cvae.pt \
+  --control-checkpoint artifacts/expanded_small_molecule_cvae_antcollapse_permuted/sequence_cvae.pt \
+  --data data_lake/silver/thesis_endpoints/generation_positive_pairs.csv \
+  --output artifacts/expanded_small_molecule_cvae_antcollapse/permutation_comparison.json \
+  --bootstrap-replicates 5000
+```
