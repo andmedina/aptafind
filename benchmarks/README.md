@@ -11,11 +11,14 @@ when available so an authorized local archive can be verified.
 |---|---|---|---|
 | Thesis CVAE v0.1.0 | First complete modern PyTorch train–evaluate–generate loop on the recovered late-2023 small-molecule dataset | `thesis_cvae_baseline_v0.1.0.json` | `thesis-cvae-baseline-v0.1.0` |
 | Expanded thesis CVAE v0.2.0 | Same sequence-CVAE architecture on the first harmonized broad-small-molecule positive-pair export | `thesis_cvae_expanded_v0.2.0.json` | `thesis-cvae-expanded-v0.2.0` |
+| Controlled thesis CVAE v0.3.0 | Anti-collapse training plus wrong-target diagnostics and a matched permuted-target-label control | `thesis_cvae_controlled_v0.3.0.json` | `thesis-cvae-controlled-v0.3.0` |
 
-Both thesis CVAE benchmarks measure held-out sequence reconstruction and
-candidate-generation mechanics. Neither is a binding-prediction benchmark. The
+The thesis CVAE benchmarks measure held-out sequence reconstruction and
+candidate-generation mechanics. None is a binding-prediction benchmark. The
 v0.1.0 and v0.2.0 metrics use different datasets and therefore are not a direct
-model comparison.
+model comparison. The v0.2.0 and v0.3.0 runs use the same split; v0.3.0 adds
+latent-use and target-label controls but still represents only one fold and one
+training seed.
 
 ## Comparison policy
 

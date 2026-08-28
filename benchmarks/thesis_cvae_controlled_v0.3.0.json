@@ -1,0 +1,195 @@
+{
+  "artifact_hashes": {
+    "baseline_v0_2_condition_diagnostics": "6a67c7ff9aa42f3c167a536c236b3fcc14ede039136f04d8084e06f6dfbe4cc7",
+    "estradiol_candidates_csv": "0595fd033f6a9d288e8a7f0d2c27ca2731277bb821508dd71f1542a083b5d620",
+    "estradiol_candidates_fasta": "0c957df3426170c7ab7fe238e8a7efd0edb7e75bc962c96f211b4a8c9d0dad33",
+    "estradiol_generation_metadata": "c602304eb628c6ea7b4a6732661a571a5ddccc92bb1ef408b87bce18824b2db8",
+    "permutation_comparison": "609719dbe9e85acaf69eec4111fb04ba1ea4f884e34ce5b271e98e665f3cabf7",
+    "permuted_checkpoint": "af6f7774f9422972bc6272611257ace66391ce85be72b7a76ca47f8cc0c07764",
+    "permuted_run_summary": "cc69c9155a761e344058cd5cbd00381f74c0d347a009c729b84b0afe929a58fc",
+    "permuted_split_manifest": "dcc39673577a74f10e529fc7bccee7b753d019c2ef99e5758bdeb48f7e3a8b49",
+    "permuted_training_history": "905dc2147645f1edd50181822b5f4dfe0f6cfa26920d6096755847e88261e0c6",
+    "primary_checkpoint": "dc2190a66f2c42f3764a559e663fa4939bc4f4b1cceef26c7d2cc72f98cb62a0",
+    "primary_run_summary": "63bd7e4f5982e2c37ccb948c0f13a9de746d4c65c3973607635684d6d1429c84",
+    "primary_split_manifest": "dcc39673577a74f10e529fc7bccee7b753d019c2ef99e5758bdeb48f7e3a8b49",
+    "primary_training_history": "58c1212714f363b36476800c3f403ffc9f1640e165793fd806e0b1ae25c62318",
+    "v0_2_comparison": "34a919ae9ec41d2de4257d4505468b4da59ac22957a48fe608fab23d8dfc6c73"
+  },
+  "benchmark_id": "thesis-cvae-controlled-v0.3.0",
+  "candidate_audit": {
+    "accepted_candidates": 20,
+    "draws": 80,
+    "exact_reference_matches": 0,
+    "exact_training_matches": 0,
+    "explicit_maximum_length": 90,
+    "explicit_minimum_length": 40,
+    "maximum_gc_fraction": 0.5692307692307692,
+    "maximum_homopolymer": 4,
+    "maximum_length": 87,
+    "maximum_reference_identity": 0.5882352941176471,
+    "median_length": 71.0,
+    "minimum_gc_fraction": 0.359375,
+    "minimum_length": 64,
+    "rejected_unique_sequences": 9,
+    "seed": 20260828,
+    "target": "estradiol"
+  },
+  "code": {
+    "implementation_commit": "2a029b2abb5f3fdb4287eb625a94953d619f3524",
+    "repository": "https://github.com/andmedina/aptafind",
+    "tag": "thesis-cvae-controlled-v0.3.0"
+  },
+  "comparison_contract": {
+    "matched_fields": [
+      "source SHA-256",
+      "target-disjoint split manifest",
+      "architecture",
+      "initialization and data-loader seed",
+      "optimizer and anti-collapse settings",
+      "evaluation examples and metrics"
+    ],
+    "primary_difference": "The primary model uses correct training target labels; the negative control uses a zero-fixed-point derangement over the 230 training targets.",
+    "remaining_controls": [
+      "repeat training seeds and target-group folds",
+      "sequence-family and publication-aware grouping",
+      "steroid-only versus broad-transfer comparison on identical steroid folds",
+      "prior-generation condition diagnostics",
+      "secondary-structure and laboratory validation"
+    ]
+  },
+  "config_hashes": {
+    "permuted_target_control": "ba296fbc0752b7893cf0af155d1dfdb1601959b1a6f7b774f7c0e12708847bbf",
+    "primary_anti_collapse": "4aaeab6408f753a5b8ebf7667775874a46e13a14158b24753b84fdabc7daf78a"
+  },
+  "dataset": {
+    "harmonization_report_sha256": "3bd10b6c2b75963d962cf8e3dc1aca879c1ffce7ad963318e78c51a3f81bf0ab",
+    "maximum_sequence_length": 100,
+    "minimum_sequence_length": 13,
+    "source_sha256": "02c59ae2a2f6f2b5ad5304fe039b3600624b5e12a088a1459fafa83889c22532",
+    "unique_sequences": 1014,
+    "unique_targets": 288,
+    "validated_sequence_target_pairs": 1835
+  },
+  "evaluation": {
+    "split_manifest_sha256": "dcc39673577a74f10e529fc7bccee7b753d019c2ef99e5758bdeb48f7e3a8b49",
+    "split_seed": 42,
+    "split_strategy": "canonical-target-disjoint",
+    "test": {
+      "rows": 184,
+      "targets": 29,
+      "tokens": 8857
+    },
+    "training": {
+      "rows": 1467,
+      "targets": 230
+    },
+    "validation": {
+      "rows": 184,
+      "targets": 29
+    }
+  },
+  "historical_v0_2_diagnostic": {
+    "active_latent_units": 0,
+    "decoder_only_permuted_condition_nll_delta_mean": 0.21465372882444403,
+    "decoder_only_permuted_condition_nll_delta_std": 0.08062314837176446,
+    "kl_divergence": 0.005270022777435573,
+    "permutations": 10,
+    "reconstruction_nll": 1.3773562728490547
+  },
+  "model": {
+    "condition_dimension": 136,
+    "decoder_hidden_dimension": 128,
+    "decoder_token_dropout": 0.3,
+    "embedding_dimension": 32,
+    "encoder_hidden_dimension": 64,
+    "free_bits_per_dimension": 0.05,
+    "latent_dimension": 16,
+    "type": "target-conditioned autoregressive sequence CVAE"
+  },
+  "permuted_target_control": {
+    "best_epoch": 12,
+    "condition_diagnostics": {
+      "decoder_only_permuted_condition_nll_delta_mean": -0.05162664720647905,
+      "decoder_only_permuted_condition_nll_delta_std": 0.030247208992540058,
+      "permutations": 10
+    },
+    "fixed_points": 0,
+    "mapping_sha256": "49880abc1086948acb239a6226cee270c9662e428bdca50d2173a33aa6f020e4",
+    "permutation_seed": 42,
+    "stopped_epoch": 22,
+    "target_count": 230,
+    "test": {
+      "active_latent_units": 16,
+      "kl_divergence": 0.8940461640772612,
+      "perplexity": 4.451903247347493,
+      "reconstruction_nll": 1.4933317007754152,
+      "token_accuracy": 0.35068307900261875
+    },
+    "zero_decoder_condition_nll_delta": -0.12150466175613417
+  },
+  "primary_results": {
+    "best_epoch": 14,
+    "best_validation_loss": 1.238711871317153,
+    "condition_diagnostics": {
+      "decoder_only_permuted_condition_nll_delta_mean": 0.045430797288013136,
+      "decoder_only_permuted_condition_nll_delta_std": 0.02723778276646739,
+      "permutations": 10,
+      "zero_decoder_condition_nll_delta": 0.021586764581561058
+    },
+    "stopped_epoch": 24,
+    "test": {
+      "active_latent_units": 16,
+      "effective_kl_divergence": 0.8559155490087427,
+      "kl_divergence": 0.6344018448954043,
+      "perplexity": 3.948637642290372,
+      "posterior_mean_variance_max": 0.13919715583324432,
+      "posterior_mean_variance_mean": 0.06898833811283112,
+      "reconstruction_nll": 1.3733706187351276,
+      "token_accuracy": 0.3714575990336305
+    },
+    "test_reconstruction_improvement_over_bigram": 0.05059088612534541
+  },
+  "recorded_at_utc": "2026-08-28T17:41:18.591105+00:00",
+  "scope": "Latent-use, target-condition, reconstruction, and candidate-generation controls; not evidence of binding, specificity, affinity, or efficacy.",
+  "software": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "python": "3.11.16",
+    "pytorch": "2.7.1",
+    "pyyaml": "6.0.3",
+    "rdkit": "2026.03.5"
+  },
+  "status": "frozen",
+  "target_label_comparison": {
+    "control_minus_primary_nll": 0.11996131488670403,
+    "control_reconstruction_nll": 1.4933317379770046,
+    "primary_reconstruction_nll": 1.3733704230903006,
+    "relative_nll_reduction_vs_control": 0.0803313234668232,
+    "target_cluster_bootstrap": {
+      "confidence_level": 0.95,
+      "control_minus_primary_nll_interval": [
+        -0.030187884922325145,
+        0.28811082206791994
+      ],
+      "fraction_at_or_below_zero": 0.0604,
+      "replicates": 5000,
+      "seed": 20260828
+    },
+    "targets_where_control_nll_is_higher": 21
+  },
+  "v0_2_reconstruction_comparison": {
+    "v0_2_minus_primary_nll": 0.003985890257879321,
+    "target_cluster_bootstrap_interval": [
+      -0.0903295513461856,
+      0.11911519731891058
+    ],
+    "interpretation": "The anti-collapse model retained comparable reconstruction; this run does not establish an NLL improvement over v0.2.0."
+  },
+  "warnings": [
+    "The target-label control point estimate favors the real-label model, but its target-cluster 95% interval crosses zero.",
+    "Only one training seed and one target-disjoint fold have been evaluated.",
+    "Target-disjoint splitting does not control sequence-family, publication, assay, or source lineage overlap.",
+    "The positive-only generator cannot distinguish binders from non-binders.",
+    "Candidate novelty and sequence composition are not affinity or specificity scores."
+  ]
+}

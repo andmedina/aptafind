@@ -104,3 +104,9 @@ aptafind-generate compare-checkpoints \
   --output artifacts/expanded_small_molecule_cvae_antcollapse/permutation_comparison.json \
   --bootstrap-replicates 5000
 ```
+
+The first completed controlled experiment is frozen in the
+[controlled anti-collapse CVAE report](controlled_thesis_cvae_run.md). Its
+point estimate favors correct target labels, while its target-cluster interval
+still crosses zero; repeated folds and seeds are therefore the next required
+control.

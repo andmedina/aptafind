@@ -151,6 +151,11 @@ The first harmonized broad-small-molecule run is separately frozen as
 with a full [expanded-run report](docs/expanded_thesis_cvae_run.md). It uses a
 different dataset from v0.1.0, so its metrics are not a direct improvement
 comparison.
+The controlled anti-collapse successor is frozen as
+[`thesis-cvae-controlled-v0.3.0`](benchmarks/thesis_cvae_controlled_v0.3.0.json),
+with a [controlled-run report](docs/controlled_thesis_cvae_run.md). It restores
+all 16 latent units and adds a matched target-label permutation control; its
+conditioning result is promising but not conclusive across the 29 test targets.
 The [benchmark comparison policy](benchmarks/README.md) defines how a future
 broad-small-molecule pretrained, steroid-fine-tuned model must be compared
 without changing the test set or overstating results across different datasets.
@@ -197,10 +202,11 @@ The first-wave ssDNA/small-molecule source catalog is also locally acquired and 
 The first Bronze-to-Silver [thesis data harmonization pipeline](docs/thesis_data_harmonization.md) is now runnable. Its initial real-data run produced 282,371 provenance-bearing measurements and a conflict-screened generator input containing 1,835 unique positive DNA sequence–target pairs across 288 canonical small-molecule structures. The generated Silver tables remain local and ignored; their input/output hashes and audits are written with each run.
 
 The first expanded-data CVAE benchmark trained successfully on that 1,835-pair
-export. It outperformed unigram and bigram token baselines on its target-disjoint
-test split, but its near-zero KL divergence signals posterior collapse. Target
-conditioning and binding utility therefore remain unproven and are explicit
-next-study controls rather than current claims.
+export. Its controlled v0.3.0 successor activates all 16 latent dimensions and
+retains comparable target-disjoint reconstruction. Correct target labels beat a
+matched permutation-trained control by 0.120 NLL in the point estimate, but the
+target-cluster 95% interval crosses zero. Repeated folds, training seeds, and
+family/publication-aware grouping remain necessary; binding utility is unproven.
 
 This supports general small-molecule endpoint modeling, but not yet a rigorous steroid-only Model A/B/C comparison. Gate 1A (benchmark characterization) is complete. Gate 1B (cross-dataset independence) is paused while the thesis-era sequence-generation workflow is modernized.
 
