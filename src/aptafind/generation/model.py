@@ -67,6 +67,7 @@ class SequenceCVAELoss:
     loss: Tensor
     reconstruction_loss: Tensor
     kl_divergence: Tensor
+    effective_kl_divergence: Tensor
     token_accuracy: Tensor
     token_count: Tensor
 
@@ -157,11 +158,27 @@ class ConditionalSequenceVAE(nn.Module):
         decoder_input_ids: Tensor,
         latent: Tensor,
         condition_representation: Tensor,
+        *,
+        token_dropout_probability: float = 0.0,
     ) -> Tensor:
         """Decode with known preceding tokens and return vocabulary logits."""
 
+        if not 0.0 <= token_dropout_probability < 1.0:
+            raise ValueError("token_dropout_probability must be in [0, 1).")
         context = torch.cat([latent, condition_representation], dim=-1)
         embedded = self.embedding(decoder_input_ids)
+        if self.training and token_dropout_probability > 0.0:
+            droppable = decoder_input_ids.ne(self.config.pad_token_id)
+            # Keep the first (BOS) position so every sequence has a stable start.
+            droppable[:, 0] = False
+            dropout_mask = (
+                torch.rand(
+                    decoder_input_ids.shape,
+                    device=decoder_input_ids.device,
+                )
+                < token_dropout_probability
+            ) & droppable
+            embedded = embedded.masked_fill(dropout_mask.unsqueeze(-1), 0.0)
         repeated_context = context.unsqueeze(1).expand(-1, embedded.shape[1], -1)
         decoder_input = torch.cat([embedded, repeated_context], dim=-1)
         initial_state = torch.tanh(self.decoder_initial_state(context)).unsqueeze(0)
@@ -175,6 +192,8 @@ class ConditionalSequenceVAE(nn.Module):
         conditions: Tensor,
         *,
         sample_latent: bool = True,
+        decoder_conditions: Tensor | None = None,
+        decoder_token_dropout: float = 0.0,
     ) -> SequenceCVAEOutput:
         """Run the posterior encoder and teacher-forced decoder."""
 
@@ -184,8 +203,13 @@ class ConditionalSequenceVAE(nn.Module):
         latent = (
             self.reparameterize(mean, log_variance) if sample_latent else mean
         )
+        if decoder_conditions is not None:
+            condition_representation = self.condition_encoder(decoder_conditions)
         logits = self.decode_teacher_forced(
-            token_ids[:, :-1], latent, condition_representation
+            token_ids[:, :-1],
+            latent,
+            condition_representation,
+            token_dropout_probability=decoder_token_dropout,
         )
         return SequenceCVAEOutput(
             logits=logits,
@@ -276,8 +300,12 @@ def sequence_cvae_loss(
     *,
     pad_token_id: int,
     beta: float,
+    free_bits_per_dimension: float = 0.0,
 ) -> SequenceCVAELoss:
     """Compute token reconstruction loss plus beta-weighted KL divergence."""
+
+    if free_bits_per_dimension < 0.0:
+        raise ValueError("free_bits_per_dimension cannot be negative.")
 
     vocabulary_size = output.logits.shape[-1]
     flat_logits = output.logits.reshape(-1, vocabulary_size)
@@ -292,15 +320,21 @@ def sequence_cvae_loss(
         reduction="sum",
     )
     reconstruction_loss = reconstruction_sum / token_count
-    kl_per_sample = -0.5 * torch.sum(
+    kl_per_dimension = -0.5 * (
         1.0
         + output.log_variance
         - output.mean.pow(2)
-        - output.log_variance.exp(),
-        dim=-1,
+        - output.log_variance.exp()
     )
+    kl_per_sample = torch.sum(kl_per_dimension, dim=-1)
     kl_divergence = kl_per_sample.mean()
-    loss = reconstruction_loss + float(beta) * kl_divergence
+    if free_bits_per_dimension > 0.0:
+        effective_kl_divergence = torch.clamp(
+            kl_per_dimension.mean(dim=0), min=float(free_bits_per_dimension)
+        ).sum()
+    else:
+        effective_kl_divergence = kl_divergence
+    loss = reconstruction_loss + float(beta) * effective_kl_divergence
 
     predictions = output.logits.argmax(dim=-1).reshape(-1)
     correct = predictions.eq(flat_targets) & token_mask
@@ -309,6 +343,7 @@ def sequence_cvae_loss(
         loss=loss,
         reconstruction_loss=reconstruction_loss,
         kl_divergence=kl_divergence,
+        effective_kl_divergence=effective_kl_divergence,
         token_accuracy=token_accuracy,
         token_count=token_count,
     )

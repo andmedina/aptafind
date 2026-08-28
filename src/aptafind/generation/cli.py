@@ -21,6 +21,7 @@ from aptafind.generation.chemistry import canonicalize_smiles
 from aptafind.generation.data import load_aptamer_table, split_aptamer_table
 from aptafind.generation.demo import write_synthetic_aptamer_table
 from aptafind.generation.pipeline import (
+    diagnose_checkpoint_conditions,
     file_sha256,
     load_run_config,
     train_sequence_generator,
@@ -94,6 +95,41 @@ def _command_train(args: argparse.Namespace) -> int:
                 "split_manifest": str(result.split_manifest_path),
                 "best_epoch": result.summary["best_epoch"],
                 "test_metrics": result.summary["test_metrics"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def _command_diagnose_condition(args: argparse.Namespace) -> int:
+    output_path = Path(args.output)
+    if output_path.exists() and not args.overwrite:
+        raise FileExistsError(f"Refusing to overwrite existing output: {output_path}")
+    report = diagnose_checkpoint_conditions(
+        checkpoint_path=args.checkpoint,
+        data_path=args.data,
+        sequence_column=args.sequence_column,
+        smiles_column=args.smiles_column,
+        target_name_column=args.target_name_column,
+        legacy_target_features_path=args.legacy_target_features,
+        legacy_smiles_column=args.legacy_smiles_column,
+        permutations=args.permutations,
+        seed=args.seed,
+        device_name=args.device,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(
+        json.dumps(
+            {
+                "output": str(output_path),
+                "checkpoint_sha256": report["checkpoint_sha256"],
+                "summary": report["condition_diagnostics"]["summary"],
+                "scope": report["scientific_scope"],
             },
             indent=2,
             sort_keys=True,
@@ -310,6 +346,21 @@ def build_parser() -> argparse.ArgumentParser:
     train_parser.add_argument("--config")
     train_parser.add_argument("--overwrite", action="store_true")
     train_parser.set_defaults(handler=_command_train)
+
+    diagnostic_parser = subparsers.add_parser(
+        "diagnose-condition",
+        help="Audit a checkpoint with zeroed and permuted target conditions.",
+    )
+    _add_dataset_arguments(diagnostic_parser)
+    diagnostic_parser.add_argument("--checkpoint", required=True)
+    diagnostic_parser.add_argument("--output", required=True)
+    diagnostic_parser.add_argument("--permutations", type=int, default=10)
+    diagnostic_parser.add_argument("--seed", type=int)
+    diagnostic_parser.add_argument("--overwrite", action="store_true")
+    diagnostic_parser.add_argument(
+        "--device", choices=("auto", "cpu", "cuda", "mps"), default="cpu"
+    )
+    diagnostic_parser.set_defaults(handler=_command_diagnose_condition)
 
     generation_parser = subparsers.add_parser(
         "generate", help="Generate filtered candidates for one target SMILES."

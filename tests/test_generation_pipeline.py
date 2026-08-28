@@ -10,6 +10,7 @@ from aptafind.generation.pipeline import (
     DataConfig,
     GenerationConfig,
     RunConfig,
+    diagnose_checkpoint_conditions,
     train_sequence_generator,
 )
 from aptafind.generation.training import TrainingConfig
@@ -37,6 +38,9 @@ def test_tiny_pipeline_trains_checkpoints_and_generates(tmp_path: Path) -> None:
             learning_rate=0.01,
             beta_max=0.01,
             beta_warmup_epochs=1,
+            free_bits_per_dimension=0.02,
+            decoder_token_dropout=0.20,
+            condition_diagnostic_permutations=2,
             patience=2,
             seed=13,
             device="cpu",
@@ -57,6 +61,11 @@ def test_tiny_pipeline_trains_checkpoints_and_generates(tmp_path: Path) -> None:
         config=config,
     )
     loaded = load_generator_checkpoint(result.checkpoint_path)
+    diagnostic = diagnose_checkpoint_conditions(
+        checkpoint_path=result.checkpoint_path,
+        data_path=dataset_path,
+        permutations=2,
+    )
     generated = generate_candidate_table(
         loaded,
         target_name=SYNTHETIC_TARGETS[0][0],
@@ -80,6 +89,9 @@ def test_tiny_pipeline_trains_checkpoints_and_generates(tmp_path: Path) -> None:
     assert result.history_path.exists()
     assert result.split_manifest_path.exists()
     assert result.summary["software_versions"]["pytorch"]
+    assert result.summary["test_metrics"]["effective_kl_divergence"] >= 0.08
+    assert not result.summary["test_condition_diagnostics"]["summary"]["available"]
+    assert diagnostic["checkpoint_sha256"]
     assert len(loaded.metadata["training_target_length_ranges"]) == 2
     assert len(generated.candidates) == 2
     assert generated.candidates["candidate_rank"].tolist() == [1, 2]

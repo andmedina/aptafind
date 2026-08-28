@@ -21,6 +21,7 @@ from aptafind.generation.baselines import (
     evaluate_unigram_baseline,
 )
 from aptafind.generation.checkpoint import (
+    load_generator_checkpoint,
     save_generator_checkpoint,
     sequence_digest,
 )
@@ -30,12 +31,14 @@ from aptafind.generation.data import (
     LoadedAptamerTable,
     make_data_loader,
     load_aptamer_table,
+    permute_target_assignments,
     split_aptamer_table,
 )
 from aptafind.generation.model import ConditionalSequenceVAE, SequenceCVAEConfig
 from aptafind.generation.tokenizer import DNATokenizer
 from aptafind.generation.training import (
     TrainingConfig,
+    evaluate_condition_controls,
     evaluate_model,
     resolve_device,
     seed_everything,
@@ -198,6 +201,99 @@ def _training_target_length_ranges(frame: pd.DataFrame) -> dict[str, dict[str, A
     return ranges
 
 
+def diagnose_checkpoint_conditions(
+    *,
+    checkpoint_path: str | Path,
+    data_path: str | Path,
+    sequence_column: str = "sequence",
+    smiles_column: str = "target_smiles",
+    target_name_column: str | None = None,
+    legacy_target_features_path: str | Path | None = None,
+    legacy_smiles_column: str = "Smiles",
+    permutations: int = 10,
+    seed: int | None = None,
+    device_name: str = "cpu",
+) -> dict[str, Any]:
+    """Rebuild a checkpoint's test fold and audit target-condition dependence."""
+
+    if permutations < 1:
+        raise ValueError("permutations must be positive.")
+    device = resolve_device(device_name)
+    loaded_checkpoint = load_generator_checkpoint(checkpoint_path, device=device)
+    metadata = loaded_checkpoint.metadata
+    source_hashes = {"aptamer_data": file_sha256(data_path)}
+    if legacy_target_features_path is not None:
+        source_hashes["legacy_target_features"] = file_sha256(
+            legacy_target_features_path
+        )
+    recorded_hashes = metadata.get("source_sha256", {})
+    if source_hashes != recorded_hashes:
+        raise ValueError(
+            "Diagnostic data hashes do not match the checkpoint metadata: "
+            f"observed={source_hashes}, recorded={recorded_hashes}."
+        )
+
+    loaded = load_aptamer_table(
+        data_path,
+        sequence_column=sequence_column,
+        smiles_column=smiles_column,
+        target_name_column=target_name_column,
+        legacy_target_features_path=legacy_target_features_path,
+        legacy_smiles_column=legacy_smiles_column,
+    )
+    data_config = metadata.get("data_config", {})
+    training_config = metadata.get("training_config", {})
+    split_seed = int(training_config.get("seed", 42))
+    partitions = split_aptamer_table(
+        loaded.frame,
+        validation_fraction=float(data_config.get("validation_fraction", 0.10)),
+        test_fraction=float(data_config.get("test_fraction", 0.10)),
+        seed=split_seed,
+        strategy=str(data_config.get("split_strategy", "target")),
+    )
+    observed_partition_summary = partitions.summary()
+    recorded_partition_summary = metadata.get("partitions")
+    if (
+        recorded_partition_summary is not None
+        and observed_partition_summary != recorded_partition_summary
+    ):
+        raise ValueError(
+            "Reconstructed partitions do not match the checkpoint metadata."
+        )
+    test_dataset = AptamerSequenceDataset(
+        partitions.test,
+        loaded_checkpoint.tokenizer,
+        loaded_checkpoint.molecule_featurizer,
+    )
+    diagnostic_seed = split_seed + 10_000 if seed is None else int(seed)
+    diagnostics = evaluate_condition_controls(
+        loaded_checkpoint.model,
+        test_dataset,
+        batch_size=int(training_config.get("batch_size", 16)),
+        device=device,
+        beta=float(training_config.get("beta_max", 0.05)),
+        free_bits_per_dimension=float(
+            training_config.get("free_bits_per_dimension", 0.0)
+        ),
+        seed=diagnostic_seed,
+        permutations=permutations,
+    )
+    return {
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "checkpoint": str(Path(checkpoint_path)),
+        "checkpoint_sha256": file_sha256(checkpoint_path),
+        "source_sha256": source_hashes,
+        "dataset": loaded.summary(),
+        "partitions": observed_partition_summary,
+        "diagnostic_seed": diagnostic_seed,
+        "condition_diagnostics": diagnostics,
+        "scientific_scope": (
+            "Condition sensitivity in posterior reconstruction is a diagnostic, "
+            "not evidence that prior samples bind a target."
+        ),
+    }
+
+
 def train_sequence_generator(
     *,
     data_path: str | Path,
@@ -259,8 +355,33 @@ def train_sequence_generator(
         fingerprint_radius=config.data.fingerprint_radius,
     ).fit(partitions.train["target_smiles"])
 
+    condition_control: dict[str, Any] = {
+        "permute_training_targets": config.training.permute_training_targets,
+        "permutation_seed": None,
+        "mapping_sha256": None,
+        "target_count": int(partitions.train["target_smiles"].nunique()),
+        "fixed_points": 0,
+    }
+    training_condition_smiles: list[str] | None = None
+    if config.training.permute_training_targets:
+        permutation_seed = config.training.seed
+        training_condition_smiles, target_mapping = permute_target_assignments(
+            partitions.train["target_smiles"], seed=permutation_seed
+        )
+        mapping_payload = json.dumps(
+            target_mapping, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+        condition_control.update(
+            {
+                "permutation_seed": permutation_seed,
+                "mapping_sha256": hashlib.sha256(mapping_payload).hexdigest(),
+            }
+        )
     train_dataset = AptamerSequenceDataset(
-        partitions.train, tokenizer, molecule_featurizer
+        partitions.train,
+        tokenizer,
+        molecule_featurizer,
+        condition_smiles=training_condition_smiles,
     )
     validation_dataset = AptamerSequenceDataset(
         partitions.validation, tokenizer, molecule_featurizer
@@ -304,6 +425,17 @@ def train_sequence_generator(
         test_loader,
         device=device,
         beta=config.training.beta_max,
+        free_bits_per_dimension=config.training.free_bits_per_dimension,
+    )
+    condition_diagnostics = evaluate_condition_controls(
+        model,
+        test_dataset,
+        batch_size=config.training.batch_size,
+        device=device,
+        beta=config.training.beta_max,
+        free_bits_per_dimension=config.training.free_bits_per_dimension,
+        seed=config.training.seed + 10_000,
+        permutations=config.training.condition_diagnostic_permutations,
     )
     unigram_baseline = evaluate_unigram_baseline(
         train_dataset, test_dataset, tokenizer
@@ -323,6 +455,7 @@ def train_sequence_generator(
         "software_versions": _software_versions(),
         "model_config": model_config.state_dict(),
         "training_config": config.training.state_dict(),
+        "training_condition_control": condition_control,
         "data_config": asdict(config.data),
         "generation_config": asdict(config.generation),
         "training_target_length_ranges": _training_target_length_ranges(
@@ -332,6 +465,7 @@ def train_sequence_generator(
         "stopped_epoch": training_result.stopped_epoch,
         "best_validation_loss": training_result.best_validation_loss,
         "test_metrics": test_metrics.state_dict(),
+        "test_condition_diagnostics": condition_diagnostics,
         "test_token_baselines": {
             "unigram": unigram_baseline.state_dict(),
             "bigram": bigram_baseline.state_dict(),

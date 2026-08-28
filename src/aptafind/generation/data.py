@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Iterable, Literal
 
 import numpy as np
 import pandas as pd
@@ -350,6 +350,35 @@ def split_aptamer_table(
     )
 
 
+def permute_target_assignments(
+    target_smiles: Iterable[str], *, seed: int
+) -> tuple[list[str], dict[str, str]]:
+    """Map every target to one different target for a label-permutation control.
+
+    The mapping is a seeded derangement over unique canonical targets, so all
+    sequences associated with one target receive the same incorrect condition
+    and no target remains mapped to itself.
+    """
+
+    values = [str(value) for value in target_smiles]
+    unique_targets = sorted(set(values))
+    if len(unique_targets) < 2:
+        raise ValueError("At least two targets are required for label permutation.")
+    rng = np.random.default_rng(seed)
+    indices = np.arange(len(unique_targets))
+    for _ in range(10_000):
+        shuffled = rng.permutation(indices)
+        if bool(np.all(shuffled != indices)):
+            break
+    else:  # pragma: no cover - a derangement exists for every n >= 2.
+        raise RuntimeError("Unable to construct a target-label derangement.")
+    mapping = {
+        target: unique_targets[int(shuffled[index])]
+        for index, target in enumerate(unique_targets)
+    }
+    return [mapping[value] for value in values], mapping
+
+
 class AptamerSequenceDataset(Dataset[dict[str, torch.Tensor]]):
     """Pre-tokenized sequence and molecule-condition tensors."""
 
@@ -358,6 +387,8 @@ class AptamerSequenceDataset(Dataset[dict[str, torch.Tensor]]):
         frame: pd.DataFrame,
         tokenizer: DNATokenizer,
         molecule_featurizer: MoleculeFeaturizer,
+        *,
+        condition_smiles: Iterable[str] | None = None,
     ) -> None:
         token_rows: list[list[int]] = []
         lengths: list[int] = []
@@ -366,11 +397,19 @@ class AptamerSequenceDataset(Dataset[dict[str, torch.Tensor]]):
             token_rows.append(token_ids)
             lengths.append(length)
 
+        resolved_condition_smiles = (
+            list(frame["target_smiles"])
+            if condition_smiles is None
+            else list(condition_smiles)
+        )
+        if len(resolved_condition_smiles) != len(frame):
+            raise ValueError("condition_smiles must contain one value per row.")
+
         if token_rows:
             self.token_ids = torch.tensor(token_rows, dtype=torch.long)
             self.lengths = torch.tensor(lengths, dtype=torch.long)
             self.conditions = torch.from_numpy(
-                molecule_featurizer.transform(frame["target_smiles"])
+                molecule_featurizer.transform(resolved_condition_smiles)
             )
         else:
             self.token_ids = torch.empty(

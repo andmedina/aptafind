@@ -10,6 +10,7 @@ from aptafind.generation.chemistry import MoleculeFeaturizer
 from aptafind.generation.data import (
     AptamerSequenceDataset,
     load_aptamer_table,
+    permute_target_assignments,
     split_aptamer_table,
 )
 from aptafind.generation.demo import write_synthetic_aptamer_table
@@ -116,3 +117,15 @@ def test_bigram_baseline_detects_simple_transition_pattern() -> None:
 
     assert bigram.negative_log_likelihood < unigram.negative_log_likelihood
     assert bigram.token_count == 15
+
+
+def test_target_label_permutation_is_grouped_and_has_no_fixed_points() -> None:
+    targets = ["CCO", "CCO", "CC(=O)O", "CCN", "CCN"]
+
+    permuted, mapping = permute_target_assignments(targets, seed=29)
+
+    assert len(permuted) == len(targets)
+    assert all(mapping[target] != target for target in set(targets))
+    assert permuted[0] == permuted[1]
+    assert permuted[2] == mapping["CC(=O)O"]
+    assert permuted[3] == permuted[4]

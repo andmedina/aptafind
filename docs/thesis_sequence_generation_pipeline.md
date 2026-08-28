@@ -110,6 +110,10 @@ separate experiment from the recovered historical-data run and cannot be used
 as a direct performance comparison because the datasets and test examples
 differ.
 
+The next iteration adds [latent-use and target-condition controls](cvae_conditioning_controls.md),
+including active-unit measurements, decoder-only target derangements, an exact
+target-label permutation control, free bits, and teacher-forced token dropout.
+
 ## Installation
 
 ```bash
