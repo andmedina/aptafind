@@ -74,6 +74,50 @@ The aggregate report includes:
 - A 5,000-replicate target-cluster bootstrap
 - Hashes for every checkpoint and matched split manifest
 
+## Frozen v0.4.0 result
+
+All 30 models completed successfully. The token-weighted out-of-fold result was:
+
+| Metric | Result |
+|---|---:|
+| Primary reconstruction NLL | 1.433576 |
+| Permuted-label control reconstruction NLL | 1.430907 |
+| Control minus primary NLL | -0.002669 |
+| Relative NLL reduction versus control | -0.187% |
+| Paired runs favoring correct labels | 5 of 15 |
+| Target-cluster 95% bootstrap interval | [-0.006425, 0.000757] |
+| Bootstrap fraction at or below zero | 0.9354 |
+| Primary active latent units, mean | 11.33 of 16 |
+| Control active latent units, mean | 11.47 of 16 |
+
+Positive control-minus-primary values favor the correctly conditioned model;
+negative values favor the permuted-label control. The mean paired difference by
+test fold was +0.002903, -0.003457, +0.000365, -0.004436, and -0.009623 for
+folds 0 through 4, respectively. The small mixed effects and interval spanning
+zero do not support a reconstruction advantage from correct target labels.
+
+The wrong-target diagnostics are consistent with the same conclusion. Mean
+wrong-target NLL deltas were -0.001017 for the primary models and -0.000783 for
+the controls, rather than a stable positive penalty for supplying an incorrect
+target condition.
+
+## Interpretation
+
+The v0.3.0 one-split point estimate was not reproduced under stricter
+independence and repeated training. The current model learns sequence structure
+and uses multiple latent dimensions, but this experiment does not demonstrate
+that its target descriptors provide generalizable target-specific information.
+Target-labelled output from this model must therefore remain a computational
+sequence sample, not a target-specific binding candidate.
+
+This is a useful negative benchmark. The software pipeline now detects a weak
+or absent conditioning signal instead of converting a favorable split into a
+claim. A successor should be compared on these exact folds against both the
+permuted-label control and simple non-neural baselines. With measured negatives
+available in the broader data lake, the next modeling stage should separate
+sequence generation from aptamer-target interaction ranking rather than asking
+a positive-only reconstruction loss to supply evidence of binding.
+
 ## Reproduction and resumption
 
 ```bash
@@ -90,5 +134,6 @@ artifacts are never silently overwritten.
 
 Generated grouping manifests, checkpoints, histories, comparisons, and the
 aggregate summary remain under the ignored local `artifacts/` directory. The
-eventual frozen benchmark record stores their SHA-256 identities without
-publishing third-party sequences or model weights.
+[frozen v0.4.0 benchmark record](../benchmarks/thesis_cvae_repeated_v0.4.0.json)
+stores their SHA-256 identities without publishing third-party sequences or
+model weights.

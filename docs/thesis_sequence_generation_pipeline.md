@@ -110,12 +110,14 @@ separate experiment from the recovered historical-data run and cannot be used
 as a direct performance comparison because the datasets and test examples
 differ.
 
-The next iteration adds [latent-use and target-condition controls](cvae_conditioning_controls.md),
+The controlled iteration adds [latent-use and target-condition controls](cvae_conditioning_controls.md),
 including active-unit measurements, decoder-only target derangements, an exact
 target-label permutation control, free bits, and teacher-forced token dropout.
-The subsequent [repeated grouped evaluation](repeated_grouped_cvae_evaluation.md)
-uses five strict target/family/publication folds and three training seeds to
-measure whether that conditioning result generalizes beyond one split.
+The completed [repeated grouped evaluation](repeated_grouped_cvae_evaluation.md)
+uses five strict target/family/publication folds and three training seeds. It
+finds no reconstruction advantage from correct labels over matched permuted
+labels, so the current generator has not demonstrated generalizable target
+conditioning.
 
 ## Installation
 
@@ -268,17 +270,19 @@ must retain the label "computational candidate" through every pre-assay stage.
   scaffold, or assay provenance.
 - Positive-only training does not teach the model to distinguish binders from
   non-binders.
-- Target-disjoint splitting prevents direct target leakage but does not yet group
-  related sequence families or publications.
+- The original target-disjoint benchmark did not group sequence families or
+  publications; the strict v0.4.0 benchmark now does, at the cost of excluding
+  one giant dependency lineage from that evaluation.
 - Sequence filters do not include secondary-structure folding in this first
   runnable version.
-- Hyperparameters have not yet been selected through nested or repeated
-  cross-validation.
+- Hyperparameters have not been selected through nested cross-validation.
 
-The next scientific step is repeated, family/publication-aware evaluation with
-target-label permutation and condition-ablation controls. The next model step
-is to address the expanded run's posterior collapse before comparing
-steroid-only training with broad-small-molecule pretraining and steroid
-fine-tuning on identical steroid folds. The next engineering step is a
-versioned candidate-screening stage that integrates structure prediction
-without making unsupported affinity claims.
+Repeated family/publication-aware evaluation and posterior-collapse controls
+are now complete. The next model step is to establish simple reconstruction
+and interaction-ranking baselines on the frozen strict folds, then train a
+separate target-interaction scorer using measured positives and negatives.
+Only after that scorer demonstrates out-of-family and out-of-publication signal
+should broad-small-molecule pretraining and steroid fine-tuning be compared on
+identical steroid folds. The next engineering step remains a versioned
+candidate-screening stage that integrates structure prediction without making
+unsupported affinity claims.

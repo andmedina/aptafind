@@ -155,7 +155,12 @@ The controlled anti-collapse successor is frozen as
 [`thesis-cvae-controlled-v0.3.0`](benchmarks/thesis_cvae_controlled_v0.3.0.json),
 with a [controlled-run report](docs/controlled_thesis_cvae_run.md). It restores
 all 16 latent units and adds a matched target-label permutation control; its
-conditioning result is promising but not conclusive across the 29 test targets.
+conditioning result was promising but not conclusive across the 29 test targets.
+The stricter successor is frozen as
+[`thesis-cvae-repeated-v0.4.0`](benchmarks/thesis_cvae_repeated_v0.4.0.json).
+Across five target/family/publication-independent folds and three seeds, correct
+target labels did not outperform matched permuted-label controls. That result
+supersedes the optimistic interpretation of the v0.3.0 point estimate.
 The [benchmark comparison policy](benchmarks/README.md) defines how a future
 broad-small-molecule pretrained, steroid-fine-tuned model must be compared
 without changing the test set or overstating results across different datasets.
@@ -205,13 +210,15 @@ The first expanded-data CVAE benchmark trained successfully on that 1,835-pair
 export. Its controlled v0.3.0 successor activates all 16 latent dimensions and
 retains comparable target-disjoint reconstruction. Correct target labels beat a
 matched permutation-trained control by 0.120 NLL in the point estimate, but the
-target-cluster 95% interval crosses zero. Repeated folds, training seeds, and
-family/publication-aware grouping remain necessary; binding utility is unproven.
+target-cluster 95% interval crosses zero.
 
-The [repeated grouped evaluation](docs/repeated_grouped_cvae_evaluation.md) now
-implements that next control as five strict target/family/publication folds,
-three training seeds, and paired real-label/permuted-label models. The runner is
-resumable and keeps all large run artifacts local and hash-audited.
+The completed [repeated grouped evaluation](docs/repeated_grouped_cvae_evaluation.md)
+tests five strict target/family/publication folds, three training seeds, and 15
+paired real-label/permuted-label comparisons. Its control was slightly better
+in the aggregate (control minus primary NLL -0.00267), the 95% target-cluster
+interval was [-0.00643, 0.00076], and only 5 of 15 paired runs favored correct
+labels. The present CVAE therefore has not demonstrated generalizable target
+conditioning; binding utility remains unproven.
 
 This supports general small-molecule endpoint modeling, but not yet a rigorous steroid-only Model A/B/C comparison. Gate 1A (benchmark characterization) is complete. Gate 1B (cross-dataset independence) is paused while the thesis-era sequence-generation workflow is modernized.
 
@@ -229,10 +236,12 @@ python -m aptafind.data.aptabench_profile \
 ```
 
 The first reproducible retrospective evaluation of the thesis-era dataset and
-candidate-generation workflow is complete. Its next milestone is repeated
-group-aware evaluation, conditioning controls, and secondary-structure candidate
-screening. Publication-level Gate 1B verification and DL-SELEX overlap analysis
-remain the next milestone for the separate trajectory-learning study.
+candidate-generation workflow and its repeated conditioning audit are complete.
+The next thesis-pipeline milestone is to separate target interaction ranking
+from positive-only sequence generation, establish simple baselines on the
+frozen strict folds, and use measured negatives before resuming target-specific
+candidate claims. Publication-level Gate 1B verification and DL-SELEX overlap
+analysis remain paused for the separate trajectory-learning study.
 
 ## Scientific and technical limitations
 
